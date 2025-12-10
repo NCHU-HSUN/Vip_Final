@@ -56,6 +56,8 @@ class Frame:
 
 class Y4MReader:
     def __init__(self, filepath: str):
+        if not os.path.exists(filepath):
+            raise FileNotFoundError(f"找不到影片檔案: {filepath}")
         self.file = open(filepath, 'rb')
         self._parse_header()
 
@@ -127,13 +129,17 @@ def algo_full_search(cur, ref, r, c, rng):
 @jit(nopython=True, nogil=True)
 def algo_tss(cur, ref, r, c, rng):
     best_sad, best_dr, best_dc, checks, step = 999999, 0, 0, 0, 4
+    neighbors = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
     while step >= 1:
-        offsets = [(0, 0)] if step == 4 else []
-        for i in range(-1, 2):
-            for j in range(-1, 2):
-                if i or j: offsets.append((i, j))
+        check_center = (step == 4) 
         ls, lr, lc = best_sad, best_dr, best_dc
-        for i, j in offsets:
+        if check_center:
+            dr, dc = best_dr, best_dc
+            if -rng <= dr <= rng and -rng <= dc <= rng:
+                sad = calculate_sad(cur, get_ref_block(ref, r, c, dr, dc))
+                checks += 1
+                if sad < ls: ls, lr, lc = sad, dr, dc
+        for i, j in neighbors:
             dr, dc = best_dr + i * step, best_dc + j * step
             if not (-rng <= dr <= rng and -rng <= dc <= rng): continue
             sad = calculate_sad(cur, get_ref_block(ref, r, c, dr, dc))
@@ -205,31 +211,35 @@ def process_row_task(row_idx, width, cur_y, ref_y, algo_func, rng):
         results.append(res)
     return row_idx, results
 
-# [新增] 視覺化驗證函式
 def save_verification_images(vname, algo_name, cur_frame, recon_frame, out_dir):
     if Image is None: return
-    
-    # 1. 儲存重建圖 (Reconstructed)
-    recon_img = Image.fromarray(recon_frame.y)
-    recon_img.save(f"{out_dir}/{vname}_{algo_name}_Recon.png")
-    
-    # 2. 儲存誤差圖 (Residual / Difference)
-    # 取絕對值差，並放大 5 倍讓誤差更明顯 (方便肉眼檢查)
-    diff = np.abs(cur_frame.y.astype(int) - recon_frame.y.astype(int)).astype(np.uint8)
-    diff_enhanced = diff * 5 
-    diff_img = Image.fromarray(diff_enhanced)
-    diff_img.save(f"{out_dir}/{vname}_{algo_name}_Error.png")
+    try:
+        recon_img = Image.fromarray(recon_frame.y)
+        recon_img.save(f"{out_dir}/{vname}_{algo_name}_Recon.png")
+        
+        diff = np.abs(cur_frame.y.astype(int) - recon_frame.y.astype(int)).astype(np.uint8)
+        diff_enhanced = diff * 5 
+        diff_img = Image.fromarray(diff_enhanced)
+        diff_img.save(f"{out_dir}/{vname}_{algo_name}_Error.png")
+    except Exception as e:
+        print(f"  [Error] 儲存圖片失敗: {e}")
 
 def analyze_video(name, path, algos, rng, executor, save_images=False, out_dir=""):
-    # print(f"    -> Analyzing {name}...", end='', flush=True)
-    if not os.path.exists(path): return {}
-    
     stats = {k: {'psnr':[], 'time':[], 'checks':[]} for k in algos}
-    reader = Y4MReader(path)
+    
+    # 詳細數據記錄 (Frame-by-Frame)
+    # 格式: [Algo, Frame_ID, PSNR, Checks, Time]
+    detailed_data = []  
     
     try:
+        reader = Y4MReader(path)
+    except Exception as e:
+        print(f"  [Error] 無法讀取影片 {path}: {e}")
+        return {}, []
+
+    try:
         ref = pad_frame(next(reader))
-    except StopIteration: return {}
+    except StopIteration: return {}, []
         
     try:
         frame_idx = 0
@@ -255,11 +265,17 @@ def analyze_video(name, path, algos, rng, executor, save_images=False, out_dir="
                 
                 t_end = time.perf_counter()
                 mb_count = (cur.height // 16) * (cur.width // 16)
-                stats[algo_name]['time'].append(t_end - t_start)
-                stats[algo_name]['checks'].append(total_checks / mb_count)
-                stats[algo_name]['psnr'].append(calc_psnr(cur, recon))
                 
-                # [關鍵] 只在第 1 幀 (Frame 0) 輸出驗證圖片
+                frame_psnr = calc_psnr(cur, recon)
+                frame_checks = total_checks / mb_count
+                frame_time = t_end - t_start
+                
+                stats[algo_name]['time'].append(frame_time)
+                stats[algo_name]['checks'].append(frame_checks)
+                stats[algo_name]['psnr'].append(frame_psnr)
+                
+                detailed_data.append([algo_name, frame_idx, frame_psnr, frame_checks, frame_time])
+                
                 if save_images and frame_idx == 0:
                     save_verification_images(name, algo_name, cur, recon, out_dir)
             
@@ -267,39 +283,103 @@ def analyze_video(name, path, algos, rng, executor, save_images=False, out_dir="
             frame_idx += 1
     finally:
         reader.close()
-    return stats
+    return stats, detailed_data
 
 # ==========================================
-# 繪圖與報表
+# 繪圖與報表 (超級升級版: 分欄位儲存)
 # ==========================================
-def save_excel_report(all_results, output_path):
-    if not openpyxl: return
+def save_excel_report_detailed(final_avg, frame_stats_avg, output_path):
+    if not openpyxl: 
+        print("未安裝 openpyxl，無法輸出 Excel。")
+        return
+        
     wb = openpyxl.Workbook()
-    if "Sheet" in wb.sheetnames: del wb["Sheet"]
     
-    ws_sum = wb.create_sheet("Summary (Avg 10 Runs)")
+    # --- 1. Summary Sheet (總表) ---
+    ws_sum = wb.active
+    ws_sum.title = "Summary"
     ws_sum.append(["Video", "Algorithm", "Avg PSNR (dB)", "Avg Checks", "Avg Time (s)", "PSNR Diff", "Checks Red.%", "Speedup"])
     
-    for cell in ws_sum[1]: cell.font = Font(bold=True, color="FFFFFF"); cell.fill = PatternFill(start_color="4F81BD", fill_type="solid")
+    header_font = Font(bold=True, color="FFFFFF")
+    header_fill = PatternFill(start_color="4F81BD", fill_type="solid")
+    for cell in ws_sum[1]: cell.font = header_font; cell.fill = header_fill
 
-    for vname, algos_data in all_results.items():
+    for vname, algos_data in final_avg.items():
         fs_psnr, fs_checks, fs_time = None, None, None
-        for algo, d in algos_data.items():
-            if "Full" in algo:
-                fs_psnr, fs_checks, fs_time = np.mean(d['psnr']), np.mean(d['checks']), np.mean(d['time'])
-                break
+        if "FullSearch" in algos_data:
+            d = algos_data["FullSearch"]
+            fs_psnr, fs_checks, fs_time = np.mean(d['psnr']), np.mean(d['checks']), np.mean(d['time'])
         
         for algo, d in algos_data.items():
             avg_p, avg_c, avg_t = np.mean(d['psnr']), np.mean(d['checks']), np.mean(d['time'])
             p_diff, c_red, spd = "-", "-", "-"
-            if fs_psnr:
+            if fs_psnr is not None and fs_checks is not None and fs_time is not None:
                 p_diff = f"{avg_p - fs_psnr:+.3f}"
                 c_red = f"{(fs_checks - avg_c)/fs_checks*100:.1f}%"
                 spd = f"{fs_time/avg_t:.1f}x" if avg_t > 0 else "-"
-            ws_sum.append([vname, algo, round(avg_p,2), round(avg_c,1), round(avg_t,4), p_diff, c_red, spd])
+            ws_sum.append([vname, algo, round(avg_p,2), round(avg_c,1), round(avg_t,5), p_diff, c_red, spd])
+
+    # --- 2. Detailed Sheets (每個影片一個 Sheet，欄位並排) ---
+    # frame_stats_avg 結構: {(Video, Algo, Frame) -> (AvgPSNR, AvgChecks, AvgTime)}
+    
+    # 先整理出有哪些影片和演算法
+    videos = sorted(list(set(k[0] for k in frame_stats_avg.keys())))
+    algos_set = sorted(list(set(k[1] for k in frame_stats_avg.keys())))
+    # 確保 FullSearch 排在第一個，方便比較
+    if "FullSearch" in algos_set:
+        algos_set.remove("FullSearch")
+        algos_set.insert(0, "FullSearch")
+
+    for vname in videos:
+        # 建立新的 Sheet，名稱為影片名
+        ws = wb.create_sheet(title=f"{vname}_Details")
+        
+        # 製作標題列: Frame | Full_PSNR | Full_Checks | Full_Time | TSS_PSNR ...
+        headers = ["Frame Index"]
+        for algo in algos_set:
+            headers.extend([f"{algo}_PSNR", f"{algo}_Checks", f"{algo}_Time"])
+        ws.append(headers)
+        
+        # 標題美化
+        for cell in ws[1]: cell.font = header_font; cell.fill = header_fill
+        
+        # 找出該影片最大的 Frame Index
+        max_frame = max([k[2] for k in frame_stats_avg.keys() if k[0] == vname])
+        
+        # 逐列填入數據
+        for f_idx in range(max_frame + 1):
+            row_data = [f_idx]
+            for algo in algos_set:
+                key = (vname, algo, f_idx)
+                if key in frame_stats_avg:
+                    p, c, t = frame_stats_avg[key]
+                    row_data.extend([round(p, 4), round(c, 1), round(t, 6)])
+                else:
+                    row_data.extend(["-", "-", "-"])
+            ws.append(row_data)
             
+        # 自動調整欄寬
+        for column in ws.columns:
+            max_length = 0
+            col_letter = get_column_letter(column[0].column)
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length: max_length = len(str(cell.value))
+                except: pass
+            ws.column_dimensions[col_letter].width = max_length + 2
+
+    # 自動調整 Summary 欄寬
+    for column in ws_sum.columns:
+        max_length = 0
+        col_letter = get_column_letter(column[0].column)
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length: max_length = len(str(cell.value))
+            except: pass
+        ws_sum.column_dimensions[col_letter].width = max_length + 2
+
     wb.save(output_path)
-    print(f"\n✅ Excel 報告已儲存: {output_path}")
+    print(f"\n✅ 詳細 Excel 報告已儲存: {output_path}")
 
 def plot_charts(video_name, stats, out_dir):
     import matplotlib.pyplot as plt
@@ -321,49 +401,94 @@ def plot_charts(video_name, stats, out_dir):
             
     for ax in [ax1, ax2, ax3]: ax.legend(); ax.grid(True)
     if has_fs: fig.text(0.5, 0.02, fs_txt, ha='center', bbox=dict(fc='white', alpha=0.9))
-    fig.savefig(f"{out_dir}/{video_name}_Chart.png")
+    fig.savefig(f"{out_dir}/{video_name}_analysis.png")
     plt.close(fig)
 
 if __name__ == '__main__':
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_dir = f"Final_Result_{ts}"
+    out_dir = f"ME_Run_{ts}"
     os.makedirs(out_dir, exist_ok=True)
+    os.makedirs(f"{out_dir}/plots", exist_ok=True)
+    
+    base_video_path = "video"
+    if not os.path.exists(base_video_path):
+        possible_paths = ["../video", "./video", "nchu-hsun/vip_final/NCHU-HSUN-Vip_Final-84430069098edb7f242cd73eaae9c798ab3ce302/video"]
+        for p in possible_paths:
+            if os.path.exists(p):
+                base_video_path = p
+                print(f"📍 偵測到影片資料夾位置: {base_video_path}")
+                break
     
     VIDEOS = {
-        "Garden": r"video/garden_sif.y4m", 
-        "Football": r"video/football_cif.y4m", 
-        "Tennis": r"video/tennis_sif.y4m"
+        "Garden": os.path.join(base_video_path, "garden_sif.y4m"), 
+        "Football": os.path.join(base_video_path, "football_cif.y4m"), 
+        "Tennis": os.path.join(base_video_path, "tennis_sif.y4m")
     }
+    
+    VALID_VIDEOS = {}
+    for k, v in VIDEOS.items():
+        if os.path.exists(v): VALID_VIDEOS[k] = v
+        else: print(f"⚠️ 警告: 找不到檔案 {v}，將跳過此測試。")
+            
     ALGOS = {"FullSearch": algo_full_search, "TSS": algo_tss, "Diamond": algo_diamond, "HEXBS": algo_hexbs}
     
     workers = os.cpu_count() or 4
-    NUM_RUNS = 10
-    final_avg = {}
+    NUM_RUNS = 3 # 恢復為 10 次，讓平均值更有意義
     
     print(f"=== 啟動驗證與效能測試 (Workers: {workers}) ===")
+    print(f"📁 結果將儲存於: {out_dir}")
     
+    final_avg = {}
+    # 用於累積 Frame-Level 的詳細數據: Key=(Video, Algo, Frame), Value={'psnr':[], ...}
+    frame_stats_accumulator = {} 
+
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
         for run_i in range(NUM_RUNS):
             print(f"\n📢 Run {run_i + 1}/{NUM_RUNS} ...")
-            # 只有第一次執行 (Run 0) 會輸出驗證圖片
             save_imgs = (run_i == 0)
             
-            for vname, vpath in VIDEOS.items():
+            for vname, vpath in VALID_VIDEOS.items():
                 print(f"   -> {vname}...", end='', flush=True)
-                cur_res = analyze_video(vname, vpath, ALGOS, 15, executor, save_images=save_imgs, out_dir=out_dir)
+                
+                cur_res, cur_details = analyze_video(vname, vpath, ALGOS, 15, executor, save_images=save_imgs, out_dir=out_dir)
                 print(" Done")
                 
+                # 1. 累積 Summary 數據
                 if vname not in final_avg:
                     final_avg[vname] = {algo: {'psnr': d['psnr'], 'checks': d['checks'], 'time': d['time']} for algo, d in cur_res.items()}
                 else:
                     for algo in ALGOS:
                         final_avg[vname][algo]['time'] = [sum(x) for x in zip(final_avg[vname][algo]['time'], cur_res[algo]['time'])]
+                        
+                # 2. 累積 Detailed Frame 數據 (為了計算平均)
+                for row in cur_details:
+                    # row = [Algo, Frame, PSNR, Checks, Time]
+                    algo, fr, p, c, t = row
+                    key = (vname, algo, fr)
+                    if key not in frame_stats_accumulator:
+                        frame_stats_accumulator[key] = {'psnr':[], 'checks':[], 'time':[]}
+                    frame_stats_accumulator[key]['psnr'].append(p)
+                    frame_stats_accumulator[key]['checks'].append(c)
+                    frame_stats_accumulator[key]['time'].append(t)
 
+    if not final_avg:
+        print("\n❌ 沒有任何影片被成功分析，請檢查路徑。")
+    else:
         print("\n📊 計算平均值並產出報告...")
+        
+        # 1. 處理 Summary 平均
         for vname in final_avg:
             for algo in final_avg[vname]:
                 final_avg[vname][algo]['time'] = [t/NUM_RUNS for t in final_avg[vname][algo]['time']]
-            plot_charts(vname, final_avg[vname], out_dir)
+            plot_charts(vname, final_avg[vname], f"{out_dir}/plots")
             
-        save_excel_report(final_avg, f"{out_dir}/Final_Report.xlsx")
-        print("\n=== 全部完成，請檢查資料夾中的 _Error.png 圖片是否正確 ===")
+        # 2. 處理 Detailed Frame 平均
+        frame_stats_avg = {}
+        for key, vals in frame_stats_accumulator.items():
+            avg_p = np.mean(vals['psnr'])
+            avg_c = np.mean(vals['checks'])
+            avg_t = np.mean(vals['time'])
+            frame_stats_avg[key] = (avg_p, avg_c, avg_t)
+
+        save_excel_report_detailed(final_avg, frame_stats_avg, f"{out_dir}/ME_Result_Detailed_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx")
+        print("\n=== 全部完成，請檢查資料夾中的圖表與 Excel ===")
