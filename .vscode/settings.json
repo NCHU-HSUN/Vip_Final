@@ -1,0 +1,16 @@
+{
+    "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+        "text": "使用 Conventional Commits 格式：<type>(<scope>): <subject>。"
+    },
+    {
+        "text": "Type 僅限使用：feat, fix, docs, style, refactor, perf, test, chore。"
+    },
+    {
+        "text": "第一行標題不超過 50 個字元。"
+    },
+    {
+        "text": "use Conventional Commits"
+    }
+]
+}
