@@ -24,6 +24,7 @@ module tb_system_verify;
     wire [7:0]  dut_mem_rdata;
 
     reg [31:0] cur_frame_start;
+    reg [31:0] ref_frame_start; // [NEW]
     reg [31:0] cur_mb_x, cur_mb_y;
     reg [7:0] dram_mem [0:MEM_DEPTH-1];
 
@@ -45,6 +46,7 @@ module tb_system_verify;
         .mem_addr(dut_mem_addr),
         .mem_rdata(dut_mem_rdata),
         .frame_start_addr(cur_frame_start), 
+        .ref_start_addr(ref_frame_start),    // [NEW]
         .mb_x_pos(cur_mb_x),                
         .mb_y_pos(cur_mb_y),                
         .mv_x(hw_mv_x),
@@ -62,6 +64,7 @@ module tb_system_verify;
         // --- 初始化 ---
         clk = 0; rst_n = 0; start = 0;
         cur_frame_start = FRAME_SIZE; 
+        ref_frame_start = 0;
         cur_mb_x = 0; cur_mb_y = 0;
 
         // --- 載入記憶體 (注意路徑) ---
@@ -97,6 +100,10 @@ module tb_system_verify;
                 cur_mb_x = exp_mb_col; 
                 cur_mb_y = exp_mb_row;
                 
+                // [NEW] Dynamic Frame Addressing
+                cur_frame_start = exp_frame_idx * FRAME_SIZE;
+                ref_frame_start = (exp_frame_idx - 1) * FRAME_SIZE;
+
                 // 啟動硬體
                 @(posedge clk); start = 1;
                 @(posedge clk); start = 0;

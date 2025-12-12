@@ -11,6 +11,7 @@ module hexbs_top (
     
     // 參數輸入
     input wire [31:0] frame_start_addr, 
+    input wire [31:0] ref_start_addr,   // [NEW]
     input wire [31:0] mb_x_pos,         
     input wire [31:0] mb_y_pos,         
     
@@ -92,7 +93,7 @@ module hexbs_top (
     assign sad_accum_next = current_accum_sad + current_diff;
     
     // 邊界檢查：確保目前的 cand_x/cand_y 合法
-    assign bound_ok = (cand_x >= -16 && cand_x <= 15 && cand_y >= -16 && cand_y <= 15);
+    assign bound_ok = (cand_x >= -16 && cand_x <= 16 && cand_y >= -16 && cand_y <= 16);
     // 如果出界，將 SAD 視為最大值 (FFFF)，否則使用計算出的 SAD
     assign sad_final_check = bound_ok ? sad_accum_next : 16'hFFFF;
 
@@ -254,7 +255,7 @@ module hexbs_top (
                 if (ref_y_calc < 0) ref_y_calc = 0;
                 else if (ref_y_calc > HEIGHT - 16) ref_y_calc = HEIGHT - 16;
 
-                mem_addr = 0 + 
+                mem_addr = ref_start_addr + 
                            (ref_y_calc * WIDTH + ref_x_calc) + 
                            ((pixel_cnt[7:4]) * WIDTH) + pixel_cnt[3:0];
             end
