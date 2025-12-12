@@ -39,9 +39,11 @@ module hexbs_top (
     
     // 座標相關宣告
     reg signed [6:0] center_x, center_y;
+    reg signed [6:0] shex_center_x, shex_center_y;
     reg signed [6:0] cand_x, cand_y;     
     reg [8:0] pixel_cnt; 
     reg [3:0] point_cnt; 
+    reg shex_load;
     
     // SAD 計算相關
     reg [15:0] current_accum_sad;
@@ -60,20 +62,20 @@ module hexbs_top (
 
     initial begin
         // Large Hexagon Offsets
+        // (dr, dc) -> (cand_y, cand_x)
         l_hex_off_x[0]=0;  l_hex_off_y[0]=0;
-        l_hex_off_x[1]=2;  l_hex_off_y[1]=0;
-        l_hex_off_x[2]=1;  l_hex_off_y[2]=2;
-        l_hex_off_x[3]=-1; l_hex_off_y[3]=2;
-        l_hex_off_x[4]=-2; l_hex_off_y[4]=0;
-        l_hex_off_x[5]=-1; l_hex_off_y[5]=-2;
-        l_hex_off_x[6]=1;  l_hex_off_y[6]=-2;
+        l_hex_off_x[1]=0;  l_hex_off_y[1]=2;   // (dr=2,  dc=0)
+        l_hex_off_x[2]=2;  l_hex_off_y[2]=1;   // (dr=1,  dc=2)
+        l_hex_off_x[3]=2;  l_hex_off_y[3]=-1;  // (dr=-1, dc=2)
+        l_hex_off_x[4]=0;  l_hex_off_y[4]=-2;  // (dr=-2, dc=0)
+        l_hex_off_x[5]=-2; l_hex_off_y[5]=-1;  // (dr=-1, dc=-2)
+        l_hex_off_x[6]=-2; l_hex_off_y[6]=1;   // (dr=1,  dc=-2)
         
-        // === 關鍵修正：Small Hexagon Offsets 順序對齊 Python ===
-        // Python: SHP = [(1,0), (0,1), (-1,0), (0,-1)]
-        s_hex_off_x[0]=1;   s_hex_off_y[0]=0;  // Python 順序 1: (1, 0)
-        s_hex_off_x[1]=0;   s_hex_off_y[1]=1;  // Python 順序 2: (0, 1)
-        s_hex_off_x[2]=-1;  s_hex_off_y[2]=0;  // Python 順序 3: (-1, 0)
-        s_hex_off_x[3]=0;   s_hex_off_y[3]=-1; // Python 順序 4: (0, -1)
+        // Small Hexagon offsets (Python: SHP = [(1,0), (0,1), (-1,0), (0,-1)])
+        s_hex_off_x[0]=0;   s_hex_off_y[0]=1;   // (dr=1,  dc=0)
+        s_hex_off_x[1]=1;   s_hex_off_y[1]=0;   // (dr=0,  dc=1)
+        s_hex_off_x[2]=0;   s_hex_off_y[2]=-1;  // (dr=-1, dc=0)
+        s_hex_off_x[3]=-1;  s_hex_off_y[3]=0;   // (dr=0,  dc=-1)
     end
 
     function [7:0] abs_diff;
@@ -105,6 +107,8 @@ module hexbs_top (
             pixel_cnt <= 0;
             point_cnt <= 0;
             center_x <= 0; center_y <= 0;
+            shex_center_x <= 0; shex_center_y <= 0;
+            shex_load <= 0;
             min_sad_reg <= 16'hFFFF;
             mv_x <= 0; mv_y <= 0; sad <= 0;
             cand_x <= 0; cand_y <= 0;
@@ -149,11 +153,23 @@ module hexbs_top (
                         current_accum_sad <= 16'hFFFF;
 
                     if (pixel_cnt == 255) begin
+`ifdef HEXBS_DEBUG
+                        if ((mb_x_pos == 0 && (mb_y_pos == 0 || mb_y_pos == 16)) ||
+                            (mb_x_pos == 64 && mb_y_pos == 16))
+                            $display("[DBGALL][LHEX] center=(%0d,%0d) cand=(%0d,%0d) ref=(%0d,%0d) sad=%0d point=%0d", 
+                                     center_x, center_y, cand_x, cand_y, ref_x_calc, ref_y_calc, sad_final_check, point_cnt);
+`endif
                         if (sad_final_check < min_sad_reg) begin
                             min_sad_reg <= sad_final_check;
                             best_point_idx <= point_cnt;
                             best_cand_x <= cand_x;
                             best_cand_y <= cand_y;
+`ifdef HEXBS_DEBUG
+                            if ((mb_x_pos == 0 && mb_y_pos == 0) || (mb_x_pos == 0 && mb_y_pos == 16) ||
+                                (mb_x_pos == 64 && mb_y_pos == 16))
+                                $display("[DBG][LHEX] center=(%0d,%0d) cand=(%0d,%0d) ref=(%0d,%0d) sad=%0d point=%0d", 
+                                         center_x, center_y, cand_x, cand_y, ref_x_calc, ref_y_calc, sad_final_check, point_cnt);
+`endif
                         end
 
                         if (point_cnt == 6) begin
@@ -186,36 +202,48 @@ module hexbs_top (
                     state <= S_S_HEX_CALC;
                     pixel_cnt <= 0;
                     current_accum_sad <= 0;
-                    // === 預先載入小六角第 0 點 ===
-                    cand_x <= center_x + s_hex_off_x[0];
-                    cand_y <= center_y + s_hex_off_y[0];
+                    shex_center_x <= center_x;
+                    shex_center_y <= center_y;
+                    shex_load <= 1;
                 end
 
                 S_S_HEX_CALC: begin
-                    if (bound_ok)
-                        current_accum_sad <= sad_accum_next;
-                    else
-                        current_accum_sad <= 16'hFFFF;
-
-                    if (pixel_cnt == 255) begin
-                        if (sad_final_check < min_sad_reg) begin
-                            min_sad_reg <= sad_final_check;
-                            best_cand_x <= cand_x;
-                            best_cand_y <= cand_y;
-                        end
-
-                        if (point_cnt == 3) begin
-                            state <= S_DONE;
-                        end else begin
-                            point_cnt <= point_cnt + 1;
-                            pixel_cnt <= 0;
-                            current_accum_sad <= 0;
-                            // === 預先計算下一個點 ===
-                            cand_x <= center_x + s_hex_off_x[point_cnt + 1];
-                            cand_y <= center_y + s_hex_off_y[point_cnt + 1];
-                        end
+                    if (shex_load) begin
+                        cand_x <= shex_center_x + s_hex_off_x[point_cnt];
+                        cand_y <= shex_center_y + s_hex_off_y[point_cnt];
+                        pixel_cnt <= 0;
+                        current_accum_sad <= 0;
+                        shex_load <= 0;
                     end else begin
-                        pixel_cnt <= pixel_cnt + 1;
+                        if (bound_ok)
+                            current_accum_sad <= sad_accum_next;
+                        else
+                            current_accum_sad <= 16'hFFFF;
+
+                        if (pixel_cnt == 255) begin
+`ifdef HEXBS_DEBUG
+                            if ((mb_x_pos == 0 && mb_y_pos == 0) || (mb_x_pos == 0 && mb_y_pos == 16) ||
+                                (mb_x_pos == 64 && mb_y_pos == 16))
+                                $display("[DBG][SHEX] center=(%0d,%0d) cand=(%0d,%0d) ref=(%0d,%0d) sad=%0d point=%0d", 
+                                         center_x, center_y, cand_x, cand_y, ref_x_calc, ref_y_calc, sad_final_check, point_cnt);
+`endif
+                            if (sad_final_check < min_sad_reg) begin
+                                min_sad_reg <= sad_final_check;
+                                best_cand_x <= cand_x;
+                                best_cand_y <= cand_y;
+                                shex_center_x <= cand_x;
+                                shex_center_y <= cand_y;
+                            end
+
+                            if (point_cnt == 3) begin
+                                state <= S_DONE;
+                            end else begin
+                                point_cnt <= point_cnt + 1;
+                                shex_load <= 1;
+                            end
+                        end else begin
+                            pixel_cnt <= pixel_cnt + 1;
+                        end
                     end
                 end
 
