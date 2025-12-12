@@ -1,5 +1,13 @@
 `timescale 1ns/1ps
 
+`ifndef WAVEFILE
+`define WAVEFILE "waveform.vcd"
+`endif
+
+`ifndef ENABLE_WAVE_DUMP_DEFAULT
+`define ENABLE_WAVE_DUMP_DEFAULT 0
+`endif
+
 module tb_system_verify;
 
     // ==========================================
@@ -34,6 +42,7 @@ module tb_system_verify;
     integer err_count = 0, total_mbs = 0, watchdog = 0;
     
     reg [8*100:1] dummy_line; 
+    reg dump_wave_enable;
 
     // ==========================================
     // 3. 實例化 DUT (Device Under Test)
@@ -60,6 +69,21 @@ module tb_system_verify;
     // 4. 時脈與測試流程
     // ==========================================
     always #5 clk = ~clk; 
+
+    initial begin
+        dump_wave_enable = `ENABLE_WAVE_DUMP_DEFAULT;
+        if ($test$plusargs("dump_wave")) dump_wave_enable = 1;
+        if ($test$plusargs("no_wave")) dump_wave_enable = 0;
+
+        if (dump_wave_enable) begin
+            $display("[Wave] Dump enabled -> %s", `WAVEFILE);
+            $dumpfile(`WAVEFILE);
+            $dumpvars(0, tb_system_verify);
+        end
+        else begin
+            $display("[Wave] Dump disabled (set +dump_wave if needed).");
+        end
+    end
 
     initial begin
         // --- 初始化 ---
