@@ -1,22 +1,26 @@
-import numpy as np
 import os
 import sys
+
+import numpy as np
+
 # 引用原本的程式碼，確保算法邏輯 100% 一致
-from Motion_EstimationG import Y4MReader, pad_frame, algo_hexbs, Frame
+from Motion_EstimationG import DEFAULT_SEARCH_RANGE, Y4MReader, pad_frame, algo_hexbs, Frame
 
 # ================= 使用者設定區 (User Settings) =================
 # 影片路徑
 VIDEO_PATH = r"video/garden_sif.y4m" 
 
-# 限制處理幀數 (None 代表處理全部，建議先設 2 幀也就是 1 個 Pair 來測試，不然 Verilog 會跑很久)
-MAX_FRAMES_TO_PROCESS = None 
+# 限制處理幀數 (None 代表處理全部，可用環境變數 HEXBS_MAX_FRAMES 覆寫)
+ENV_MAX_FRAMES = os.environ.get("HEXBS_MAX_FRAMES")
+MAX_FRAMES_TO_PROCESS = None if not ENV_MAX_FRAMES else int(ENV_MAX_FRAMES)
 
-# 搜尋範圍 (必須跟 Verilog 設定一樣)
-SEARCH_RANGE = 16 
+# 搜尋範圍 (必須與 Verilog 與 Python 主程式一致，可用 HEXBS_SEARCH_RANGE 覆寫)
+SEARCH_RANGE = int(os.environ.get("HEXBS_SEARCH_RANGE", DEFAULT_SEARCH_RANGE))
 
 # 輸出檔名
-OUTPUT_HEX_FILE = "full_video.hex"       # 給 Verilog 讀的記憶體檔
-OUTPUT_TRACE_FILE = "golden_trace.txt"   # 給 Verilog 比對的答案卷
+OUTPUT_DIR = "golden_patterns"
+OUTPUT_HEX_FILE = os.path.join(OUTPUT_DIR, "full_video.hex")       # 給 Verilog 讀的記憶體檔
+OUTPUT_TRACE_FILE = os.path.join(OUTPUT_DIR, "golden_trace.txt")   # 給 Verilog 比對的答案卷
 # ==============================================================
 
 def write_frame_to_hex(f_handle, frame_data):
@@ -30,10 +34,14 @@ def write_frame_to_hex(f_handle, frame_data):
 def run_full_generation():
     print(f"🚀 開始執行全影片數據生成...")
     print(f"📂 讀取影片: {VIDEO_PATH}")
+    print(f"🔧 搜尋範圍設定: ±{SEARCH_RANGE}")
+    if MAX_FRAMES_TO_PROCESS:
+        print(f"🧪 只處理前 {MAX_FRAMES_TO_PROCESS} 幀以加速驗證")
     
     if not os.path.exists(VIDEO_PATH):
         print(f"❌ 錯誤: 找不到影片檔案 {VIDEO_PATH}")
         return
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     try:
         reader = Y4MReader(VIDEO_PATH)

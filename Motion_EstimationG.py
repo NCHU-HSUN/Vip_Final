@@ -1,14 +1,23 @@
-import numpy as np
+import concurrent.futures
+import json
+import math
 import os
 import sys
-import math
 import time
+from dataclasses import dataclass, field
 from datetime import datetime
-import concurrent.futures
+from typing import List, Tuple
+
+import numpy as np
 
 # ==========================================
 # 1. 系統設定與 JIT 匯入
 # ==========================================
+
+DEFAULT_SEARCH_RANGE = 32  # 對應論文 Stage-1 的 ±32 搜尋範圍
+HW_TRACE_SAMPLE_MBS = [(0, 0), (0, 16), (16, 0)]  # 觀察硬體 FSM 映射
+HEXBS_LHP = ((2, 0), (1, 2), (-1, 2), (-2, 0), (-1, -2), (1, -2))
+HEXBS_SHP = ((1, 0), (0, 1), (-1, 0), (0, -1))
 
 # 匯入 Numba 加速
 try:
@@ -103,6 +112,49 @@ class MotionVectorResult:
     def __init__(self, mv_r, mv_c, sad, check_points):
         self.mv_r, self.mv_c, self.sad, self.check_points = mv_r, mv_c, sad, check_points
 
+
+@dataclass
+class HexbsCandidateLog:
+    stage: str
+    center: Tuple[int, int]
+    offset: Tuple[int, int]
+    candidate: Tuple[int, int]
+    sad: int
+
+
+@dataclass
+class HexbsMacroblockTrace:
+    video: str
+    frame_idx: int
+    mb_row: int
+    mb_col: int
+    search_range: int
+    centers: List[Tuple[int, int]] = field(default_factory=list)
+    candidates: List[HexbsCandidateLog] = field(default_factory=list)
+    best_vector: Tuple[int, int] = (0, 0)
+    min_sad: int = 0
+
+    def to_dict(self) -> dict:
+        return {
+            "video": self.video,
+            "frame_idx": self.frame_idx,
+            "macroblock": {"row": self.mb_row, "col": self.mb_col},
+            "search_range": self.search_range,
+            "centers": self.centers,
+            "candidates": [
+                {
+                    "stage": c.stage,
+                    "center": c.center,
+                    "offset": c.offset,
+                    "candidate": c.candidate,
+                    "sad": c.sad,
+                }
+                for c in self.candidates
+            ],
+            "best_vector": self.best_vector,
+            "min_sad": self.min_sad,
+        }
+
 @jit(nopython=True, nogil=True) 
 def calculate_sad(b1: np.ndarray, b2: np.ndarray) -> int:
     return np.sum(np.abs(b1.astype(np.int16) - b2.astype(np.int16)))
@@ -180,8 +232,6 @@ def algo_diamond(cur, ref, r, c, rng):
 
 @jit(nopython=True, nogil=True)
 def algo_hexbs(cur, ref, r, c, rng):
-    LHP = [(2,0), (1,2), (-1,2), (-2,0), (-1,-2), (1,-2)]
-    SHP = [(1,0), (0,1), (-1,0), (0,-1)]
     cache = np.zeros((2*rng+1, 2*rng+1), dtype=np.int8)
     checks, best_dr, best_dc = 0, 0, 0
     best_sad = calculate_sad(cur, get_ref_block(ref, r, c, 0, 0))
@@ -189,20 +239,82 @@ def algo_hexbs(cur, ref, r, c, rng):
     
     while True:
         ctr_r, ctr_c, center_best = best_dr, best_dc, True
-        for i, j in LHP:
+        for i, j in HEXBS_LHP:
             dr, dc = ctr_r + i, ctr_c + j
             if not (-rng<=dr<=rng and -rng<=dc<=rng) or cache[dr+rng, dc+rng]: continue
             sad = calculate_sad(cur, get_ref_block(ref, r, c, dr, dc))
             checks += 1; cache[dr+rng, dc+rng] = 1
             if sad < best_sad: best_sad, best_dr, best_dc, center_best = sad, dr, dc, False
         if center_best: break
-    for i, j in SHP:
+    for i, j in HEXBS_SHP:
         dr, dc = best_dr + i, best_dc + j
         if not (-rng<=dr<=rng and -rng<=dc<=rng) or cache[dr+rng, dc+rng]: continue
         sad = calculate_sad(cur, get_ref_block(ref, r, c, dr, dc))
         checks += 1; cache[dr+rng, dc+rng] = 1
         if sad < best_sad: best_sad, best_dr, best_dc = sad, dr, dc
     return MotionVectorResult(best_dr, best_dc, best_sad, checks)
+
+
+def hexbs_hw_trace(video_name: str, frame_idx: int, mb_row: int, mb_col: int,
+                   cur_frame: Frame, ref_frame: Frame, rng: int) -> HexbsMacroblockTrace:
+    trace = HexbsMacroblockTrace(video=video_name, frame_idx=frame_idx,
+                                 mb_row=mb_row, mb_col=mb_col, search_range=rng)
+    cur_block = cur_frame.y[mb_row:mb_row+16, mb_col:mb_col+16]
+    best_sad = calculate_sad(cur_block, get_ref_block(ref_frame.y, mb_row, mb_col, 0, 0))
+    best_dr = 0
+    best_dc = 0
+    cache = {(0, 0)}
+    trace.centers.append((0, 0))
+
+    while True:
+        ctr_r, ctr_c = best_dr, best_dc
+        center_best = True
+        for off_r, off_c in HEXBS_LHP:
+            dr, dc = ctr_r + off_r, ctr_c + off_c
+            if not (-rng <= dr <= rng and -rng <= dc <= rng) or (dr, dc) in cache:
+                continue
+            sad = int(calculate_sad(cur_block, get_ref_block(ref_frame.y, mb_row, mb_col, dr, dc)))
+            cache.add((dr, dc))
+            trace.candidates.append(HexbsCandidateLog(stage="LHP",
+                                                      center=(ctr_r, ctr_c),
+                                                      offset=(off_r, off_c),
+                                                      candidate=(dr, dc),
+                                                      sad=sad))
+            if sad < best_sad:
+                best_sad, best_dr, best_dc, center_best = sad, dr, dc, False
+                trace.centers.append((dr, dc))
+        if center_best:
+            break
+
+    for off_r, off_c in HEXBS_SHP:
+        dr, dc = best_dr + off_r, best_dc + off_c
+        if not (-rng <= dr <= rng and -rng <= dc <= rng) or (dr, dc) in cache:
+            continue
+        sad = int(calculate_sad(cur_block, get_ref_block(ref_frame.y, mb_row, mb_col, dr, dc)))
+        cache.add((dr, dc))
+        trace.candidates.append(HexbsCandidateLog(stage="SHP",
+                                                  center=(best_dr, best_dc),
+                                                  offset=(off_r, off_c),
+                                                  candidate=(dr, dc),
+                                                  sad=sad))
+        if sad < best_sad:
+            best_sad, best_dr, best_dc = sad, dr, dc
+            trace.centers.append((dr, dc))
+
+    trace.best_vector = (best_dr, best_dc)
+    trace.min_sad = int(best_sad)
+    return trace
+
+
+def capture_hw_trace_samples(video_name: str, frame_idx: int, ref_frame: Frame, cur_frame: Frame,
+                             samples: List[Tuple[int, int]], rng: int) -> List[dict]:
+    records = []
+    for row, col in samples:
+        if row + 16 > cur_frame.height or col + 16 > cur_frame.width:
+            continue
+        trace = hexbs_hw_trace(video_name, frame_idx, row, col, cur_frame, ref_frame, rng)
+        records.append(trace.to_dict())
+    return records
 
 # ==========================================
 # 4. 分析流程 (Analysis Pipeline)
@@ -238,13 +350,14 @@ def save_verification_images(vname, algo_name, cur_frame, recon_frame, out_dir):
     except Exception as e:
         print(f"  [Error] 儲存圖片失敗: {e}")
 
-def analyze_video(name, path, algos, rng, executor, save_images=False, out_dir=""):
+def analyze_video(name, path, algos, rng, executor, save_images=False, out_dir="", hw_trace_cfg=None):
     # 本次執行的統計數據
     stats = {k: {'psnr':[], 'time':[], 'checks':[]} for k in algos}
     
     # 詳細數據記錄 (Frame-by-Frame)
     # 格式: [Algo, Frame_ID, PSNR, Checks, Time]
-    detailed_data = []  
+    detailed_data = []
+    hw_trace_records = []
     
     try:
         reader = Y4MReader(path)
@@ -293,12 +406,23 @@ def analyze_video(name, path, algos, rng, executor, save_images=False, out_dir="
                 
                 if save_images and frame_idx == 0:
                     save_verification_images(name, algo_name, cur, recon, out_dir)
+
+            if hw_trace_cfg and frame_idx < hw_trace_cfg.get("max_frames", 1):
+                samples = hw_trace_cfg.get("samples", HW_TRACE_SAMPLE_MBS)
+                traces = capture_hw_trace_samples(name, frame_idx, ref, cur, samples, rng)
+                hw_trace_records.extend(traces)
             
             ref = cur
             frame_idx += 1
     finally:
         reader.close()
-    return stats, detailed_data
+    if hw_trace_records and out_dir:
+        trace_file = hw_trace_cfg.get("filename", f"{name}_hw_mapping_trace.json") if hw_trace_cfg else f"{name}_hw_mapping_trace.json"
+        trace_path = os.path.join(out_dir, trace_file)
+        with open(trace_path, "w", encoding="utf-8") as f:
+            json.dump(hw_trace_records, f, indent=2, ensure_ascii=False)
+        print(f"  ↳ 已輸出硬體映射追蹤: {trace_path}")
+    return stats, detailed_data, hw_trace_records
 
 # ==========================================
 # 5. 報告生成 (Ultimate 版：結合 Detailed 與 Per Loop)
@@ -436,6 +560,7 @@ if __name__ == '__main__':
     out_dir = f"ME_Ultimate_{ts}"
     os.makedirs(out_dir, exist_ok=True)
     os.makedirs(f"{out_dir}/plots", exist_ok=True)
+    search_range = int(os.environ.get("HEXBS_SEARCH_RANGE", DEFAULT_SEARCH_RANGE))
     
     # 1. 智慧路徑搜尋
     base_video_path = "video"
@@ -457,7 +582,7 @@ if __name__ == '__main__':
     for k, v in VIDEOS.items():
         if os.path.exists(v): VALID_VIDEOS[k] = v
         else: print(f"⚠️ 警告: 找不到檔案 {v}，將跳過此測試。")
-            
+    
     ALGOS = {"FullSearch": algo_full_search, "TSS": algo_tss, "Diamond": algo_diamond, "HEXBS": algo_hexbs}
     
     workers = os.cpu_count() or 4
@@ -465,11 +590,13 @@ if __name__ == '__main__':
     
     print(f"=== 啟動終極版驗證與效能測試 (Workers: {workers}) ===")
     print(f"📁 結果將儲存於: {out_dir}")
+    print(f"🔧 搜尋範圍設定: ±{search_range} pixels")
     
     # 資料容器
     per_loop_records = [] # 存每一輪的摘要 (List of Dict)
     frame_stats_accumulator = {} # 存每一幀的詳細數據 (Key -> List of values)
     final_avg_for_plot = {} # 存最後平均給繪圖用
+    hw_trace_paths = {}
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
         for run_i in range(NUM_RUNS):
@@ -479,10 +606,20 @@ if __name__ == '__main__':
             
             for vname, vpath in VALID_VIDEOS.items():
                 print(f"   -> {vname}...", end='', flush=True)
-                
+                hw_cfg = None
+                if run_i == 0:
+                    hw_cfg = {
+                        "samples": HW_TRACE_SAMPLE_MBS,
+                        "max_frames": 1,
+                        "filename": f"{vname}_hw_mapping_trace.json"
+                    }
                 # 執行分析
-                cur_res, cur_details = analyze_video(vname, vpath, ALGOS, 15, executor, save_images=save_imgs, out_dir=out_dir)
+                cur_res, cur_details, hw_trace = analyze_video(
+                    vname, vpath, ALGOS, search_range, executor,
+                    save_images=save_imgs, out_dir=out_dir, hw_trace_cfg=hw_cfg)
                 print(" Done")
+                if hw_trace and hw_cfg:
+                    hw_trace_paths[vname] = os.path.join(out_dir, hw_cfg["filename"])
                 
                 # A. 處理 Per Loop Data (來自 M 版的概念)
                 for algo, d in cur_res.items():
@@ -539,3 +676,7 @@ if __name__ == '__main__':
         save_excel_report_ultimate(per_loop_records, frame_stats_avg, excel_name)
         
         print("\n=== 終極版測試完成！ ===")
+        if hw_trace_paths:
+            print("🔎 已同步輸出 HEXBS 硬體映射紀錄：")
+            for vid, path in hw_trace_paths.items():
+                print(f"   - {vid}: {path}")

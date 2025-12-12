@@ -4,7 +4,7 @@ import os
 # ==========================================
 # 參數設定 (跟你的 Motion_Estimation.py 類似)
 # ==========================================
-SEARCH_RANGE = 7        # 為了硬體實作簡單，我們先設小一點，比如 7
+SEARCH_RANGE = 32       # 與論文/硬體一致：±32 pixels
 BLOCK_SIZE = 16         # H.264 標準 Macroblock 大小
 FILENAME = "video/garden_sif.y4m" # 請確保路徑正確，或改成你有的影片
 

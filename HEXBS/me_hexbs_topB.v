@@ -23,6 +23,9 @@ module hexbs_top (
 );
     parameter WIDTH = 352;
     parameter HEIGHT = 240;
+    parameter SEARCH_RANGE = 32;
+    localparam signed [6:0] SEARCH_MIN = -SEARCH_RANGE;
+    localparam signed [6:0] SEARCH_MAX = SEARCH_RANGE;
     
     // 狀態機定義
     localparam S_IDLE        = 0;
@@ -95,7 +98,8 @@ module hexbs_top (
     assign sad_accum_next = current_accum_sad + current_diff;
     
     // 邊界檢查：確保目前的 cand_x/cand_y 合法
-    assign bound_ok = (cand_x >= -16 && cand_x <= 16 && cand_y >= -16 && cand_y <= 16);
+    assign bound_ok = (cand_x >= SEARCH_MIN && cand_x <= SEARCH_MAX &&
+                       cand_y >= SEARCH_MIN && cand_y <= SEARCH_MAX);
     // 如果出界，將 SAD 視為最大值 (FFFF)，否則使用計算出的 SAD
     assign sad_final_check = bound_ok ? sad_accum_next : 16'hFFFF;
 

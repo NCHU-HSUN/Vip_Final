@@ -5,13 +5,14 @@ module tb_system_verify;
     // ==========================================
     // 1. 參數設定 (必須與 Python gen_golden.py 一致)
     // ==========================================
-    parameter FRAME_WIDTH  = 352;  
-    parameter FRAME_HEIGHT = 240; 
-    parameter MB_SIZE      = 16;
-    parameter SEARCH_R     = 16;   
+    parameter FRAME_WIDTH   = 352;  
+    parameter FRAME_HEIGHT  = 240; 
+    parameter MB_SIZE       = 16;
+    parameter SEARCH_R      = 32;   // 對應論文 ±32 搜尋範圍
+    parameter TOTAL_FRAMES  = 115;   // must cover all frames present in full_video.hex
     
     localparam FRAME_SIZE  = FRAME_WIDTH * FRAME_HEIGHT;
-    localparam MEM_DEPTH   = FRAME_SIZE * 3; 
+    localparam MEM_DEPTH   = FRAME_SIZE * TOTAL_FRAMES; 
 
     // ==========================================
     // 2. 訊號宣告
@@ -24,7 +25,7 @@ module tb_system_verify;
     wire [7:0]  dut_mem_rdata;
 
     reg [31:0] cur_frame_start;
-    reg [31:0] ref_frame_start; // [NEW]
+    reg [31:0] ref_frame_start; 
     reg [31:0] cur_mb_x, cur_mb_y;
     reg [7:0] dram_mem [0:MEM_DEPTH-1];
 
@@ -46,7 +47,7 @@ module tb_system_verify;
         .mem_addr(dut_mem_addr),
         .mem_rdata(dut_mem_rdata),
         .frame_start_addr(cur_frame_start), 
-        .ref_start_addr(ref_frame_start),    // [NEW]
+        .ref_start_addr(ref_frame_start),    
         .mb_x_pos(cur_mb_x),                
         .mb_y_pos(cur_mb_y),                
         .mv_x(hw_mv_x),
@@ -71,8 +72,7 @@ module tb_system_verify;
         $display("--------------------------------------------");
         $display("Loading Video Memory from '../golden_patterns/full_video.hex'...");
         
-        // 這裡會讀取 hex 檔。如果你的 python 腳本沒有完整產生資料，這裡就會報 Warning。
-        // 請務必確認 full_video.hex 的行數是否足夠 (至少要有 352*240*2 = 168960 行)
+        // 請務必確認 full_video.hex 的行數是否足夠
         $readmemh("../golden_patterns/full_video.hex", dram_mem);
         
         // --- 開啟 Trace 檔 ---
@@ -96,13 +96,19 @@ module tb_system_verify;
                 // 讀取成功
                 total_mbs = total_mbs + 1;
 
-                // --- 修正：Python 已經給出像素座標，不需要再乘以 MB_SIZE ---
                 cur_mb_x = exp_mb_col; 
                 cur_mb_y = exp_mb_row;
                 
-                // [NEW] Dynamic Frame Addressing
+                // Dynamic Frame Addressing
                 cur_frame_start = exp_frame_idx * FRAME_SIZE;
                 ref_frame_start = (exp_frame_idx - 1) * FRAME_SIZE;
+
+                if ((cur_frame_start + FRAME_SIZE) > MEM_DEPTH ||
+                    (ref_frame_start + FRAME_SIZE) > MEM_DEPTH) begin
+                    $display("Error: Frame %0d exceeds allocated MEM_DEPTH=%0d. Increase TOTAL_FRAMES or regenerate data.",
+                             exp_frame_idx, MEM_DEPTH);
+                    $finish;
+                end
 
                 // 啟動硬體
                 @(posedge clk); start = 1;
@@ -120,17 +126,21 @@ module tb_system_verify;
                 
                 // 比對 MV
                 if (hw_mv_x !== exp_mv_x || hw_mv_y !== exp_mv_y) begin
+                    // [FAIL] 情況，格式維持原樣
                     $display("[FAIL] MB(%3d, %3d) | Exp MV:(%2d, %2d) | HW MV:(%2d, %2d) | SAD Exp:%5d HW:%5d", 
                              exp_mb_row, exp_mb_col, exp_mv_x, exp_mv_y, hw_mv_x, hw_mv_y, exp_sad, hw_sad);
                     err_count = err_count + 1;
-                    // 為了除錯，我們允許它多報幾個錯再停，設為 50
+                    
                     if (err_count > 50) begin
                          $display("Too many errors. Stopping.");
                          $finish;
                     end
                 end 
                 else begin
-                    if (total_mbs % 100 == 0) $display("[PASS] Processed %0d MBs...", total_mbs);
+                    // [PASS] 情況：修改這裡！
+                    // 原本是每 100 次顯示一次，現在改成每次都顯示詳細資訊，格式模仿上面 FAIL 的樣子
+                    $display("[PASS] MB(%3d, %3d) | Exp MV:(%2d, %2d) | HW MV:(%2d, %2d) | SAD Exp:%5d HW:%5d", 
+                             exp_mb_row, exp_mb_col, exp_mv_x, exp_mv_y, hw_mv_x, hw_mv_y, exp_sad, hw_sad);
                 end
             end 
             else begin
