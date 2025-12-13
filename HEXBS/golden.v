@@ -42,7 +42,6 @@ module tb_system_verify;
     integer err_count = 0, total_mbs = 0, watchdog = 0;
     
     reg [8*100:1] dummy_line; 
-    reg dump_wave_enable;
 
     // ==========================================
     // 3. 實例化 DUT (Device Under Test)
@@ -69,21 +68,6 @@ module tb_system_verify;
     // 4. 時脈與測試流程
     // ==========================================
     always #5 clk = ~clk; 
-
-    initial begin
-        dump_wave_enable = `ENABLE_WAVE_DUMP_DEFAULT;
-        if ($test$plusargs("dump_wave")) dump_wave_enable = 1;
-        if ($test$plusargs("no_wave")) dump_wave_enable = 0;
-
-        if (dump_wave_enable) begin
-            $display("[Wave] Dump enabled -> %s", `WAVEFILE);
-            $dumpfile(`WAVEFILE);
-            $dumpvars(0, tb_system_verify);
-        end
-        else begin
-            $display("[Wave] Dump disabled (set +dump_wave if needed).");
-        end
-    end
 
     initial begin
         // --- 初始化 ---
@@ -179,6 +163,80 @@ module tb_system_verify;
         if (err_count == 0 && total_mbs > 0) $display("Result: PERFECT MATCH! (恭喜 HSUN)");
         else $display("Result: FAILED.");
         $display("--------------------------------------------");
+        
+        // --- 執行額外的邊界條件測試並存檔 ---
+        run_boundary_tests();
+
         $finish;
     end
+
+    // ==========================================
+    // 5. 新增功能：邊界與特定狀況測試 (含波形存檔)
+    // ==========================================
+    task run_boundary_tests;
+        integer i, r, c;
+        reg [7:0] pixel_val;
+        begin
+            $display("\n[Extra Test] Starting Boundary Condition Tests (Waveform Enabled)...");
+            
+            // 1. 啟用波形存檔 (只存這一段)
+            $dumpfile("waveform_boundary.vcd");
+            $dumpvars(0, tb_system_verify);
+
+            // 重置記憶體指標 (使用記憶體前段作為測試區)
+            ref_frame_start = 0;
+            cur_frame_start = FRAME_SIZE;
+            cur_mb_x = 10; // 選擇中間一點的位置避免邊界問題干擾觀察
+            cur_mb_y = 10;
+
+            // -------------------------------------------------------
+            // 測試狀況 A: 靜止畫面 (Zero Motion)
+            // 預期結果: MV=(0,0), SAD=0
+            // -------------------------------------------------------
+            $display("[Extra Test] Case A: Zero Motion (Static Pattern)");
+            // 填入簡單的測試圖樣 (全部填 100)
+            for (i = 0; i < FRAME_SIZE*2; i = i + 1) dram_mem[i] = 8'd100;
+
+            // 執行 DUT
+            @(posedge clk); start = 1;
+            @(posedge clk); start = 0;
+            wait(done);
+            $display("    -> Result: MV=(%d, %d), SAD=%d", hw_mv_x, hw_mv_y, hw_sad);
+
+            // -------------------------------------------------------
+            // 測試狀況 B: 移動測試 (Motion Test)
+            // 模擬物體向右下方移動 (MV應該接近正值)
+            // -------------------------------------------------------
+            $display("[Extra Test] Case B: Motion Test (Object Moved)");
+            
+            // 清空背景為 0
+            for (i = 0; i < FRAME_SIZE*2; i = i + 1) dram_mem[i] = 8'd0;
+
+            // 在 Reference Frame 的 (MB_X, MB_Y) 畫一個亮塊 (值255)
+            // 座標轉換: addr = start + (y*width) + x
+            for (r = 0; r < 16; r = r + 1) begin
+                for (c = 0; c < 16; c = c + 1) begin
+                    dram_mem[ref_frame_start + (cur_mb_y*16 + r)*FRAME_WIDTH + (cur_mb_x*16 + c)] = 8'd255;
+                end
+            end
+
+            // 在 Current Frame 的 (MB_X+5, MB_Y+3) 畫同樣的亮塊 -> 預期 MV 約為 (5, 3)
+            for (r = 0; r < 16; r = r + 1) begin
+                for (c = 0; c < 16; c = c + 1) begin
+                    dram_mem[cur_frame_start + (cur_mb_y*16 + 3 + r)*FRAME_WIDTH + (cur_mb_x*16 + 5 + c)] = 8'd255;
+                end
+            end
+
+            // 執行 DUT
+            @(posedge clk); start = 1;
+            @(posedge clk); start = 0;
+            wait(done);
+            $display("    -> Result: MV=(%d, %d), SAD=%d", hw_mv_x, hw_mv_y, hw_sad);
+
+            // 關閉波形
+            $dumpoff;
+            $display("[Extra Test] Done. Waveform saved to 'waveform_boundary.vcd'\n");
+        end
+    endtask
+
 endmodule
