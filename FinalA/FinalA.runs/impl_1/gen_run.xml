@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenRun Id="impl_1" LaunchPart="xc7a35tcpg236-1" LaunchTime="1765638066">
+  <File Type="PA-TCL" Name="Smart_Top.tcl"/>
+  <File Type="REPORTS-TCL" Name="Smart_Top_reports.tcl"/>
+  <File Type="INIT-TIMING" Name="Smart_Top_timing_summary_init.rpt"/>
+  <File Type="OPT-DCP" Name="Smart_Top_opt.dcp"/>
+  <File Type="OPT-DRC" Name="Smart_Top_drc_opted.rpt"/>
+  <File Type="OPT-UTIL" Name="Smart_Top_utilization_opted.rpt"/>
+  <File Type="OPT-UTIL-PB" Name="Smart_Top_utilization_opted.pb"/>
+  <File Type="OPT-METHODOLOGY-DRC" Name="Smart_Top_methodology_drc_opted.rpt"/>
+  <File Type="OPT-HWDEF" Name="Smart_Top.hwdef"/>
+  <File Type="OPT-TIMING" Name="Smart_Top_timing_summary_opted.rpt"/>
+  <File Type="OPT-RQA-PB" Name="Smart_Top_rqa_opted.pb"/>
+  <File Type="PWROPT-DCP" Name="Smart_Top_pwropt.dcp"/>
+  <File Type="PWROPT-DRC" Name="Smart_Top_drc_pwropted.rpt"/>
+  <File Type="PWROPT-TIMING" Name="Smart_Top_timing_summary_pwropted.rpt"/>
+  <File Type="PLACE-DCP" Name="Smart_Top_placed.dcp"/>
+  <File Type="PLACE-IO" Name="Smart_Top_io_placed.rpt"/>
+  <File Type="PLACE-CLK" Name="Smart_Top_clock_utilization_placed.rpt"/>
+  <File Type="PLACE-UTIL" Name="Smart_Top_utilization_placed.rpt"/>
+  <File Type="PLACE-UTIL-PB" Name="Smart_Top_utilization_placed.pb"/>
+  <File Type="PLACE-CTRL" Name="Smart_Top_control_sets_placed.rpt"/>
+  <File Type="PLACE-SIMILARITY" Name="Smart_Top_incremental_reuse_placed.rpt"/>
+  <File Type="PLACE-PRE-SIMILARITY" Name="Smart_Top_incremental_reuse_pre_placed.rpt"/>
+  <File Type="PLACE-TIMING" Name="Smart_Top_timing_summary_placed.rpt"/>
+  <File Type="PLACE-RQA-PB" Name="Smart_Top_rqa_placed.pb"/>
+  <File Type="POSTPLACE-PWROPT-DCP" Name="Smart_Top_postplace_pwropt.dcp"/>
+  <File Type="POSTPLACE-PWROPT-TIMING" Name="Smart_Top_timing_summary_postplace_pwropted.rpt"/>
+  <File Type="PHYSOPT-DCP" Name="Smart_Top_physopt.dcp"/>
+  <File Type="PHYSOPT-DRC" Name="Smart_Top_drc_physopted.rpt"/>
+  <File Type="PHYSOPT-TIMING" Name="Smart_Top_timing_summary_physopted.rpt"/>
+  <File Type="ROUTE-ERROR-DCP" Name="Smart_Top_routed_error.dcp"/>
+  <File Type="ROUTE-DCP" Name="Smart_Top_routed.dcp"/>
+  <File Type="ROUTE-BLACKBOX-DCP" Name="Smart_Top_routed_bb.dcp"/>
+  <File Type="ROUTE-UTIL" Name="Smart_Top_utilization_routed.rpt"/>
+  <File Type="ROUTE-UTIL-PB" Name="Smart_Top_utilization_routed.pb"/>
+  <File Type="ROUTE-DRC" Name="Smart_Top_drc_routed.rpt"/>
+  <File Type="ROUTE-DRC-PB" Name="Smart_Top_drc_routed.pb"/>
+  <File Type="ROUTE-DRC-RPX" Name="Smart_Top_drc_routed.rpx"/>
+  <File Type="ROUTE-METHODOLOGY-DRC" Name="Smart_Top_methodology_drc_routed.rpt"/>
+  <File Type="ROUTE-METHODOLOGY-DRC-RPX" Name="Smart_Top_methodology_drc_routed.rpx"/>
+  <File Type="ROUTE-METHODOLOGY-DRC-PB" Name="Smart_Top_methodology_drc_routed.pb"/>
+  <File Type="ROUTE-PWR" Name="Smart_Top_power_routed.rpt"/>
+  <File Type="ROUTE-PWR-SUM" Name="Smart_Top_power_summary_routed.pb"/>
+  <File Type="ROUTE-PWR-RPX" Name="Smart_Top_power_routed.rpx"/>
+  <File Type="ROUTE-STATUS" Name="Smart_Top_route_status.rpt"/>
+  <File Type="ROUTE-STATUS-PB" Name="Smart_Top_route_status.pb"/>
+  <File Type="ROUTE-TIMINGSUMMARY" Name="Smart_Top_timing_summary_routed.rpt"/>
+  <File Type="ROUTE-TIMING-PB" Name="Smart_Top_timing_summary_routed.pb"/>
+  <File Type="ROUTE-TIMING-RPX" Name="Smart_Top_timing_summary_routed.rpx"/>
+  <File Type="ROUTE-SIMILARITY" Name="Smart_Top_incremental_reuse_routed.rpt"/>
+  <File Type="ROUTE-CLK" Name="Smart_Top_clock_utilization_routed.rpt"/>
+  <File Type="ROUTE-BUS-SKEW" Name="Smart_Top_bus_skew_routed.rpt"/>
+  <File Type="ROUTE-BUS-SKEW-PB" Name="Smart_Top_bus_skew_routed.pb"/>
+  <File Type="ROUTE-BUS-SKEW-RPX" Name="Smart_Top_bus_skew_routed.rpx"/>
+  <File Type="ROUTE-RQS-PB" Name="Smart_Top_rqs_routed.pb"/>
+  <File Type="POSTROUTE-PHYSOPT-DCP" Name="Smart_Top_postroute_physopt.dcp"/>
+  <File Type="POSTROUTE-PHYSOPT-BLACKBOX-DCP" Name="Smart_Top_postroute_physopt_bb.dcp"/>
+  <File Type="POSTROUTE-PHYSOPT-TIMING" Name="Smart_Top_timing_summary_postroute_physopted.rpt"/>
+  <File Type="POSTROUTE-PHYSOPT-TIMING-PB" Name="Smart_Top_timing_summary_postroute_physopted.pb"/>
+  <File Type="POSTROUTE-PHYSOPT-TIMING-RPX" Name="Smart_Top_timing_summary_postroute_physopted.rpx"/>
+  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW" Name="Smart_Top_bus_skew_postroute_physopted.rpt"/>
+  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW-PB" Name="Smart_Top_bus_skew_postroute_physopted.pb"/>
+  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW-RPX" Name="Smart_Top_bus_skew_postroute_physopted.rpx"/>
+  <File Type="BG-BIT" Name="Smart_Top.bit"/>
+  <File Type="BG-BIN" Name="Smart_Top.bin"/>
+  <File Type="BITSTR-MSK" Name="Smart_Top.msk"/>
+  <File Type="BITSTR-RBT" Name="Smart_Top.rbt"/>
+  <File Type="BITSTR-NKY" Name="Smart_Top.nky"/>
+  <File Type="BITSTR-BMM" Name="Smart_Top_bd.bmm"/>
+  <File Type="BITSTR-MMI" Name="Smart_Top.mmi"/>
+  <File Type="PDI-FILE" Name="Smart_Top.pdi"/>
+  <File Type="BOOT-PDI-FILE" Name="Smart_Top_boot.pdi"/>
+  <File Type="PL-PDI-FILE" Name="Smart_Top_pld.pdi"/>
+  <File Type="RCFI_FILE" Name="Smart_Top.rcfi"/>
+  <File Type="CFI_FILE" Name="Smart_Top.cfi"/>
+  <File Type="RNPI_FILE" Name="Smart_Top.rnpi"/>
+  <File Type="RCDO-FILE" Name="Smart_Top.rcdo"/>
+  <File Type="MARKER-RNPI-FILE" Name="Smart_Top_markers.rnpi"/>
+  <File Type="MARKER-RCDO-FILE" Name="Smart_Top_markers.rcdo"/>
+  <File Type="BOOT_RNPI_FILE" Name="Smart_Top_boot.rnpi"/>
+  <File Type="BOOT_MARKER_RNPI_FILE" Name="Smart_Top_boot_markers.rnpi"/>
+  <File Type="PL_RNPI_FILE" Name="Smart_Top_pld.rnpi"/>
+  <File Type="PL_MARKER_RNPI_FILE" Name="Smart_Top_pld_markers.rnpi"/>
+  <File Type="PL_MASK_RNPI_FILE" Name="Smart_Top_pld_mask.rnpi"/>
+  <File Type="PL_SHUTDOWN_RNPI_FILE" Name="Smart_Top_pld_shutdown.rnpi"/>
+  <File Type="PL_UNMASK_RNPI_FILE" Name="Smart_Top_pld_unmask.rnpi"/>
+  <File Type="PL-RCDO-FILE" Name="Smart_Top_pld.rcdo"/>
+  <File Type="PL-CLEAR-RCDO-FILE" Name="Smart_Top_pld_clear.rcdo"/>
+  <File Type="PL_MARKER_RCDO_FILE" Name="Smart_Top_pld_markers.rcdo"/>
+  <File Type="PL_MASK_RCDO_FILE" Name="Smart_Top_pld_mask.rcdo"/>
+  <File Type="PL_UNMASK_MARKER_RCDO_FILE" Name="Smart_Top_pld_unmask_markers.rcdo"/>
+  <File Type="PL_UNMASK_RCDO_FILE" Name="Smart_Top_pld_unmask.rcdo"/>
+  <File Type="NPI_FILE" Name="Smart_Top.npi"/>
+  <File Type="RBD_FILE" Name="Smart_Top.rbd"/>
+  <File Type="MMI-FILE" Name="Smart_Top.mmi"/>
+  <File Type="BIF-FILE" Name="Smart_Top.bif"/>
+  <File Type="BOOT-BIF-FILE" Name="Smart_Top_boot.bif"/>
+  <File Type="PL-BIF-FILE" Name="Smart_Top_pld.bif"/>
+  <File Type="LTX-FILE" Name="Smart_Top.ltx"/>
+  <File Type="BOOT-LTX-FILE" Name="Smart_Top_boot.ltx"/>
+  <File Type="PL-LTX-FILE" Name="Smart_Top_pld.ltx"/>
+  <File Type="BITSTR-LTX" Name="debug_nets.ltx"/>
+  <File Type="BITSTR-LTX" Name="Smart_Top.ltx"/>
+  <File Type="BITSTR-SYSDEF" Name="Smart_Top.sysdef"/>
+  <File Type="BG-BGN" Name="Smart_Top.bgn"/>
+  <File Type="BG-DRC" Name="Smart_Top.drc"/>
+  <File Type="RDI-RDI" Name="Smart_Top.vdi"/>
+  <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
+  <File Type="ROUTE-RQS" Name="Smart_Top_routed.rqs"/>
+  <File Type="POSTROUTE-PHYSOPT-RQS" Name="Smart_Top_postroute_physopted.rqs"/>
+  <File Type="ROUTE-RQS-RPT" Name="route_report_qor_suggestions_0.rpt"/>
+  <File Type="POSTROUTE-PHYSOPT-RQS-RPT" Name="postroute_physopt_report_qor_suggestions_0.rpt"/>
+  <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
+    <Filter Type="Srcs"/>
+    <File Path="$PSRCDIR/sources_1/new/UART_Modules.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/hexbs_top.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/Smart_Top.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="DesignMode" Val="RTL"/>
+      <Option Name="TopModule" Val="Smart_Top"/>
+      <Option Name="TopAutoSet" Val="TRUE"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1" RelGenDir="$PGENDIR/constrs_1">
+    <Filter Type="Constrs"/>
+    <File Path="$PSRCDIR/constrs_1/new/Basys3_Master.xdc">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="ConstrsType" Val="XDC"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="utils" Type="Utils" RelSrcDir="$PSRCDIR/utils_1" RelGenDir="$PGENDIR/utils_1">
+    <Filter Type="Utils"/>
+    <File Path="$PSRCDIR/utils_1/imports/synth_1/Smart_Top.dcp">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedInSteps" Val="synth_1"/>
+        <Attr Name="AutoDcp" Val="1"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TopAutoSet" Val="TRUE"/>
+    </Config>
+  </FileSet>
+  <Strategy Version="1" Minor="2">
+    <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2025"/>
+    <Step Id="init_design"/>
+    <Step Id="opt_design"/>
+    <Step Id="power_opt_design"/>
+    <Step Id="place_design"/>
+    <Step Id="post_place_power_opt_design"/>
+    <Step Id="phys_opt_design"/>
+    <Step Id="route_design"/>
+    <Step Id="post_route_phys_opt_design"/>
+    <Step Id="write_bitstream"/>
+  </Strategy>
+</GenRun>
