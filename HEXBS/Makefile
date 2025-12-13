@@ -1,7 +1,4 @@
-# Makefile for HEXBS Verification
-
-# Default Simulator: vcs (Synopsys), iverilog (Icarus), or ncverilog (Cadence)
-SIM ?= vcs
+# Makefile for HEXBS Verification using iverilog
 
 # Source Files
 TB_FILE   = golden.v
@@ -9,7 +6,7 @@ TB_FILE   = golden.v
 DUT_FILES = $(filter-out $(TB_FILE), $(wildcard *.v))
 
 # Output
-EXEC      = simv
+EXEC      = simulation
 LOG       = sim.log
 
 .PHONY: all run clean
@@ -17,26 +14,10 @@ LOG       = sim.log
 all: run
 
 run:
-	@echo "Starting Simulation with $(SIM)..."
-ifeq ($(SIM), vcs)
-	# VCS Compilation and Run
-	vcs -full64 -sverilog -debug_access+all \
-		$(TB_FILE) $(DUT_FILES) \
-		-o $(EXEC) \
-		-l $(LOG)
-	./$(EXEC) +dump_wave
-else ifeq ($(SIM), iverilog)
+	@echo "Starting Simulation with iverilog..."
 	# Icarus Verilog Compilation and Run
 	iverilog -g2012 -o $(EXEC) $(TB_FILE) $(DUT_FILES)
-	vvp $(EXEC) +dump_wave
-else ifeq ($(SIM), ncverilog)
-	# NC-Verilog Run
-	ncverilog +access+rwc +v2k \
-		$(TB_FILE) $(DUT_FILES) \
-		+dump_wave
-else
-	@echo "Error: SIM=$(SIM) not supported. Use vcs, iverilog, or ncverilog."
-endif
+	vvp $(EXEC)
 
 clean:
-	rm -rf $(EXEC) $(EXEC).daidir csrc *.log *.vcd ucli.key
+	rm -rf $(EXEC) *.log *.vcd

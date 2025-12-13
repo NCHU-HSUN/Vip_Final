@@ -71,3 +71,26 @@ python gen_golden.py
 ## 硬體（Verilog）組件
 
 `HEXBS/` 目錄包含了運動估計模組的 Verilog 實現。您可以使用提供的 `Makefile` 搭配相容的 Verilog 模擬器（例如 VCS）來執行模擬。模擬將使用 `gen_golden.py` 腳本生成的黃金向量來驗證其正確性。
+
+### HEXBS 用法
+
+1.  **進入 HEXBS 目錄：**
+    ```bash
+    cd HEXBS/
+    ```
+
+2.  **執行模擬：**
+    使用 `make` 指令來編譯並執行 Verilog 模擬。預設使用 VCS 模擬器。
+    ```bash
+    make
+    ```
+    您也可以透過 `SIM` 變數指定其他支援的模擬器（例如 `iverilog` 或 `ncverilog`）：
+    ```bash
+    make SIM=iverilog
+    ```
+
+3.  **清除模擬檔案：**
+    若要清除所有模擬產生的檔案（例如 `simv`, `sim.log`, `*.vcd`），請執行以下指令：
+    ```bash
+    make clean
+    ```
