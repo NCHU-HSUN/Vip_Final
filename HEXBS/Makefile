@@ -15,7 +15,7 @@ all: run
 
 run:
 	@echo "Starting Simulation with iverilog..."
-	# Icarus Verilog Compilation and Run
+	@REM Icarus Verilog Compilation and Run
 	iverilog -g2012 -o $(EXEC) $(TB_FILE) $(DUT_FILES)
 	vvp $(EXEC)
 
