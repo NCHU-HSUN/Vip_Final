@@ -109,6 +109,8 @@ def load_golden_trace(trace_path: Path):
 
 
 def select_cases(args, trace_entries):
+    if getattr(args, "all", False):
+        return trace_entries
     if args.frame is not None and args.mb_row is not None and args.mb_col is not None:
         for entry in trace_entries:
             if (
@@ -226,6 +228,22 @@ def parse_args():
     parser.add_argument("--frame", type=int, help="指定 Frame")
     parser.add_argument("--mb-row", type=int, help="指定 MB Row (像素座標)")
     parser.add_argument("--mb-col", type=int, help="指定 MB Col (像素座標)")
+    parser.add_argument(
+        "--all",
+        action="store_true",
+        help="忽略 case-index/count，直接跑完整份黃金 trace",
+    )
+    parser.add_argument(
+        "--fail-fast",
+        action="store_true",
+        help="遇到與黃金資料不符時立即停止測試",
+    )
+    parser.add_argument(
+        "--fail-limit",
+        type=int,
+        default=0,
+        help="指定發現多少筆錯誤後停止；0 代表不限",
+    )
     return parser.parse_args()
 
 
@@ -258,6 +276,9 @@ def run_verification():
     print(f"已連線 {args.port} (baud={args.baud})，開始傳輸區域資料...")
 
     last_window_key = None
+    fail_count = 0
+    fail_details = []
+    stop_reason = None
 
     try:
         for entry in valid_cases:
@@ -306,9 +327,7 @@ def run_verification():
 
             print(f"  [FPGA] MV=({fpga_mv_x}, {fpga_mv_y}), SAD={fpga_sad}")
             mv_match = (fpga_mv_x == exp_mv_x) and (fpga_mv_y == exp_mv_y)
-            # sad_match = (fpga_sad == exp_sad)
-            # 允許 SAD 有微小誤差
-            sad_match = abs(fpga_sad - exp_sad) <= 5
+            sad_match = (fpga_sad == exp_sad)
 
             if mv_match and sad_match:
                 print("  ✓ 與黃金資料完全一致！")
@@ -320,9 +339,45 @@ def run_verification():
                     diff = fpga_sad - exp_sad
                     print(f"    - SAD mismatch: HW={fpga_sad}, EXP={exp_sad} (差值 {diff})")
                 print("    請確認視窗資料或搜尋範圍是否正確。")
+                fail_count += 1
+                fail_details.append(
+                    {
+                        "frame": frame_idx,
+                        "mb_row": mb_row,
+                        "mb_col": mb_col,
+                        "exp_mv": (exp_mv_x, exp_mv_y),
+                        "exp_sad": exp_sad,
+                        "hw_mv": (fpga_mv_x, fpga_mv_y),
+                        "hw_sad": fpga_sad,
+                        "sad_diff": fpga_sad - exp_sad,
+                    }
+                )
+                if args.fail_fast:
+                    print("    已啟用 fail-fast，測試在第一個失敗點停止。")
+                    stop_reason = "fail-fast"
+                    break
+                if args.fail_limit > 0 and fail_count >= args.fail_limit:
+                    print(f"    已累積 {fail_count} 筆錯誤，達到 --fail-limit 設定，上述錯誤為最後一筆。")
+                    stop_reason = "fail-limit"
+                    break
 
     finally:
         ser.close()
+
+    if fail_details:
+        print("\n=== 測試錯誤摘要 ===")
+        for idx, info in enumerate(fail_details, start=1):
+            exp_mv_x, exp_mv_y = info["exp_mv"]
+            hw_mv_x, hw_mv_y = info["hw_mv"]
+            print(
+                f"[{idx}] Frame={info['frame']} MB(Row={info['mb_row']}, Col={info['mb_col']})"
+                f" | EXP MV=({exp_mv_x},{exp_mv_y}) SAD={info['exp_sad']}"
+                f" | HW MV=({hw_mv_x},{hw_mv_y}) SAD={info['hw_sad']} (差值 {info['sad_diff']})"
+            )
+        if stop_reason == "fail-fast":
+            print("※ 已於第一筆錯誤後停止 (fail-fast)")
+        elif stop_reason == "fail-limit":
+            print(f"※ 因達到 --fail-limit 限制 ({fail_count} 筆) 而結束測試")
 
 
 if __name__ == "__main__":
