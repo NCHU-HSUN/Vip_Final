@@ -1,0 +1,16 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2025.1 (win64) Build 6140274 Thu May 22 00:12:29 MDT 2025
+| Date         : Sat Dec 13 23:03:39 2025
+| Host         : DESKTOP-1HCTPEK running 64-bit major release  (build 9200)
+| Command      : report_bus_skew -warn_on_violation -file Smart_Top_bus_skew_routed.rpt -pb Smart_Top_bus_skew_routed.pb -rpx Smart_Top_bus_skew_routed.rpx
+| Design       : Smart_Top
+| Device       : 7a35t-cpg236
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+| Design State : Routed
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Bus Skew Report
+
+No bus skew constraints
+

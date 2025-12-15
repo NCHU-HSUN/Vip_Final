@@ -1,35 +1,23 @@
-# ==========================================
-#  Verilog 通用自動化腳本 (Makefile)
-#  適用：Icarus Verilog + GTKWave / WaveTrace
-# ==========================================
+# Makefile for HEXBS Verification using iverilog
 
-# 1. 變數設定
-# 找出當前資料夾下所有的 .v 檔案
-SRCS = $(wildcard *.v)
-# 設定輸出執行檔的名稱
-PROJ = simulation
-# 設定波形檔名稱 (必須跟你的 testbench $dumpfile 裡面的名字一樣)
-WAVE = waveform.vcd
+# Source Files
+TB_FILE   = golden.v
+# Find all .v files in current directory as DUT, excluding the testbench
+DUT_FILES = $(filter-out $(TB_FILE), $(wildcard *.v))
 
-# 2. 主要指令 (輸入 make 會執行的動作)
-# 邏輯：先編譯(compile) -> 再執行(run)
-all: clean compile run
+# Output
+EXEC      = simulation
+LOG       = sim.log
 
-# 編譯：把所有 .v 檔變成一個執行檔
-compile:
-	@echo "🔨 Compiling..."
-	iverilog -o $(PROJ) $(SRCS)
+.PHONY: all run clean
 
-# 執行：跑模擬，並產生波形
+all: run
+
 run:
-	@echo "🚀 Running Simulation..."
-	vvp $(PROJ)
-	@echo "✅ Done! Waveform generated: $(WAVE)"
+	@echo "Starting Simulation with iverilog..."
+	
+	iverilog -g2012 -o $(EXEC) $(TB_FILE) $(DUT_FILES)
+	vvp $(EXEC)
 
-# 3. 清除指令 (輸入 make clean 會執行的動作)
 clean:
-	@echo "🧹 Cleaning up..."
-	rm -f $(PROJ) $(WAVE)
-
-# 偽目標設定 (避免資料夾剛好有跟指令同名的檔案)
-.PHONY: all compile run clean
+	rm -rf $(EXEC) *.log *.vcd

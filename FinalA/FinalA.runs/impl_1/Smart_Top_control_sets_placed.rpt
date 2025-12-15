@@ -1,0 +1,611 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2025.1 (win64) Build 6140274 Thu May 22 00:12:29 MDT 2025
+| Date         : Sat Dec 13 23:03:00 2025
+| Host         : DESKTOP-1HCTPEK running 64-bit major release  (build 9200)
+| Command      : report_control_sets -verbose -file Smart_Top_control_sets_placed.rpt
+| Design       : Smart_Top
+| Device       : xc7a35t
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Control Set Information
+
+Table of Contents
+-----------------
+1. Summary
+2. Histogram
+3. Flip-Flop Distribution
+4. Detailed Control Set Information
+
+1. Summary
+----------
+
++----------------------------------------------------------+-------+
+|                          Status                          | Count |
++----------------------------------------------------------+-------+
+| Total control sets                                       |   533 |
+|    Minimum number of control sets                        |   533 |
+|    Addition due to synthesis replication                 |     0 |
+|    Addition due to physical synthesis replication        |     0 |
+| Unused register locations in slices containing registers |    70 |
++----------------------------------------------------------+-------+
+* Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
+** Run report_qor_suggestions for automated merging and remapping suggestions
+
+
+2. Histogram
+------------
+
++--------------------+-------+
+|       Fanout       | Count |
++--------------------+-------+
+| Total control sets |   533 |
+| >= 0 to < 4        |     4 |
+| >= 4 to < 6        |     4 |
+| >= 6 to < 8        |     0 |
+| >= 8 to < 10       |   516 |
+| >= 10 to < 12      |     0 |
+| >= 12 to < 14      |     1 |
+| >= 14 to < 16      |     3 |
+| >= 16              |     5 |
++--------------------+-------+
+* Control sets can be remapped at either synth_design or opt_design
+
+
+3. Flip-Flop Distribution
+-------------------------
+
++--------------+-----------------------+------------------------+-----------------+--------------+
+| Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
++--------------+-----------------------+------------------------+-----------------+--------------+
+| No           | No                    | No                     |              47 |           18 |
+| No           | No                    | Yes                    |               9 |            7 |
+| No           | Yes                   | No                     |               0 |            0 |
+| Yes          | No                    | No                     |            4114 |         1535 |
+| Yes          | No                    | Yes                    |             164 |           55 |
+| Yes          | Yes                   | No                     |              36 |            9 |
++--------------+-----------------------+------------------------+-----------------+--------------+
+
+
+4. Detailed Control Set Information
+-----------------------------------
+
++----------------+--------------------------------------+--------------------------------------+------------------+----------------+--------------+
+|  Clock Signal  |             Enable Signal            |           Set/Reset Signal           | Slice Load Count | Bel Load Count | Bels / Slice |
++----------------+--------------------------------------+--------------------------------------+------------------+----------------+--------------+
+|  clk_sys_BUFG  | u_rx/r_Clock_Count                   |                                      |                1 |              1 |         1.00 |
+|  clk_sys_BUFG  | u_tx/r_SM_Main__0[2]                 |                                      |                1 |              1 |         1.00 |
+|  clk_IBUF_BUFG |                                      |                                      |                1 |              2 |         2.00 |
+|  clk_sys_BUFG  | u_tx/r_Clock_Count                   |                                      |                1 |              3 |         3.00 |
+|  clk_sys_BUFG  | u_core/state[3]_i_1_n_0              | btnC_IBUF                            |                2 |              4 |         2.00 |
+|  clk_sys_BUFG  | u_core/point_idx[3]_i_1_n_0          | btnC_IBUF                            |                1 |              4 |         4.00 |
+|  clk_sys_BUFG  | u_rx/FSM_onehot_r_SM_Main[4]_i_1_n_0 |                                      |                1 |              5 |         5.00 |
+|  clk_sys_BUFG  | u_tx/r_Clock_Count                   | u_tx/r_Clock_Count[5]_i_1_n_0        |                2 |              5 |         2.50 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[175][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_tx/r_Tx_Data                       |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_tx/E[0]                            | btnC_IBUF                            |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_12[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[116][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[114][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[115][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[101][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[105][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[111][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[106][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[0][7]_i_1_n_0      |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[102][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[103][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[108][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[107][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[104][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[109][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[100][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[112][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[113][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[110][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[10][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[126][7]_i_1_n_0    |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[120][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[134][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[143][7]_i_1_n_0    |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[12][7]_i_1_n_0     |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[133][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[11][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[123][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[149][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[137][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[147][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[14][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[140][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[122][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[139][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[141][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[152][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[153][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[151][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[125][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[154][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[135][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[145][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[150][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[130][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[128][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[136][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[13][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[142][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[127][7]_i_1_n_0    |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[132][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[118][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[129][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[146][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[138][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[119][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[144][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[148][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[124][7]_i_1_n_0    |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[117][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[131][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[121][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[210][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[155][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[160][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[169][7]_i_1_n_0    |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[173][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[174][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[157][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[156][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[166][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[167][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[170][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[171][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[181][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[184][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[185][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[17][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[182][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[183][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[187][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[158][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[159][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[16][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[186][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[161][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[164][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[168][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[177][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[163][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[172][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[162][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[15][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[176][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[180][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[188][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[165][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[179][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[189][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[18][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[190][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[178][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[195][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[211][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[193][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[222][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[194][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[203][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[223][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[209][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[224][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[207][7]_i_1_n_0    |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[225][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[202][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[204][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[215][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[227][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[228][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[197][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[198][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[217][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[229][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[22][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[1][7]_i_1_n_0      |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[205][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[200][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[201][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[226][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[230][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[231][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[191][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[213][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[214][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[216][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[199][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[196][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[218][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[219][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[206][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[20][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[192][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[212][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[19][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[21][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[208][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[220][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[221][7]_i_1_n_0    |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[233][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[237][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[241][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[242][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[236][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[243][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[234][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[248][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[247][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[238][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[232][7]_i_1_n_0    |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[250][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[235][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[251][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[253][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[239][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[240][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[244][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[23][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[24][7]_i_1_n_0     |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[252][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[249][7]_i_1_n_0    |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[245][7]_i_1_n_0    |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[254][7]_i_1_n_0    |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[246][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[255][7]_i_1_n_0    |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[28][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[29][7]_i_1_n_0     |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[30][7]_i_1_n_0     |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[27][7]_i_1_n_0     |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[2][7]_i_1_n_0      |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[31][7]_i_1_n_0     |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[32][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[33][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[34][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[26][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[25][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[64][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[59][7]_i_1_n_0     |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[71][7]_i_1_n_0     |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[72][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[73][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[74][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[75][7]_i_1_n_0     |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[50][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[42][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[37][7]_i_1_n_0     |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[56][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[35][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[39][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[3][7]_i_1_n_0      |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[43][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[47][7]_i_1_n_0     |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[62][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[63][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[44][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[66][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[49][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[54][7]_i_1_n_0     |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[68][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[4][7]_i_1_n_0      |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[38][7]_i_1_n_0     |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[60][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[45][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[48][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[36][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[5][7]_i_1_n_0      |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[67][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[40][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[55][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[69][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[41][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[51][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[61][7]_i_1_n_0     |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[46][7]_i_1_n_0     |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[53][7]_i_1_n_0     |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[57][7]_i_1_n_0     |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[65][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[6][7]_i_1_n_0      |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[70][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[52][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[89][7]_i_1_n_0     |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[94][7]_i_1_n_0     |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[85][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[91][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[99][7]_i_1_n_0     |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[88][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[80][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[9][7]_i_1_n_0      |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[77][7]_i_1_n_0     |                                      |                8 |              8 |         1.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[79][7]_i_1_n_0     |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[8][7]_i_1_n_0      |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[82][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[87][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[93][7]_i_1_n_0     |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[90][7]_i_1_n_0     |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[84][7]_i_1_n_0     |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[96][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[98][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[78][7]_i_1_n_0     |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[81][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[7][7]_i_1_n_0      |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[76][7]_i_1_n_0     |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[83][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[97][7]_i_1_n_0     |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[92][7]_i_1_n_0     |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[95][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[86][7]_i_1_n_0     |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_core/cur_mb_mem[58][7]_i_1_n_0     |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/E[0]                            |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_23[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_24[0]          |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_21[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_25[0]          |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_26[0]          |                                      |                8 |              8 |         1.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_28[0]          |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_2[0]           |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1][0]             |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_14[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_16[0]          |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_22[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_29[0]          |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_18[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_3[0]           |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_27[0]          |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_30[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_1[0]           |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_10[0]          |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_11[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_12[0]          |                                      |                8 |              8 |         1.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_13[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_15[0]          |                                      |                8 |              8 |         1.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_19[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_0[0]           |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_20[0]          |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_17[0]          |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[2]_14[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_18[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_41[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_39[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[2]_7[0]           |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_8[0]           |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[2]_6[0]           |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_25[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_31[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[2]_12[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_20[0]          |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_26[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[2]_11[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_21[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_34[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_35[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_24[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_36[0]          |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_6[0]           |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_11[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_27[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_3[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_38[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[2]_13[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_30[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_10[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_13[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_37[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_43[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_9[0]           |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_4[0]           |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[2]_2[0]           |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_44[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_46[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[2]_10[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[2]_5[0]           |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[2]_8[0]           |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3][0]             |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[2][0]             |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_42[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_40[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[2]_3[0]           |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_7[0]           |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[2]_4[0]           |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_0[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_16[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_19[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_15[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_17[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_22[0]          |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[2]_0[0]           |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[2]_1[0]           |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_33[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_45[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_12[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[2]_9[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_2[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_28[0]          |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_14[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_29[0]          |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_23[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_5[0]           |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[1]_32[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_1[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_45[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_56[0]          |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_49[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_64[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_35[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_70[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_71[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_77[0]          |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_8[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_42[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_61[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_13[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_52[0]          |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_75[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_1[0]           |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_69[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_7[0]           |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_43[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_62[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_12[0]          |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_14[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_15[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_16[0]          |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_17[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_41[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_60[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_11[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_34[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_31[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_4[0]           |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_36[0]          |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_46[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_50[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_51[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_53[0]          |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_58[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_32[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_33[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_47[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_39[0]          |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_5[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_57[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_59[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_6[0]           |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_65[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_37[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_66[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_54[0]          |                                      |                8 |              8 |         1.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_40[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_48[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_44[0]          |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_63[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_67[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_68[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_72[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_73[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_74[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_76[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_55[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_9[0]           |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4][0]             |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_0[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_10[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_24[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_23[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_30[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_44[0]          |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_10[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_29[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_3[0]           |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_31[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_25[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_28[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_2[0]           |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_31[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_33[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_34[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_36[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_24[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_39[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_43[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_45[0]          |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_46[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_5[0]           |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_11[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_15[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_16[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_30[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_38[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_19[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_6[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_20[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_7[0]           |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_26[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_32[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_40[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_18[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_41[0]          |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_21[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_29[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_13[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_22[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_23[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[3]_38[0]          |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_17[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_18[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_19[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_2[0]           |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_4[0]           |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_20[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_9[0]           |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_42[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_14[0]          |                                      |                7 |              8 |         1.14 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_0[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_1[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_22[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_25[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_26[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_27[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_3[0]           |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_35[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_8[0]           |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_27[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5][0]             |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_21[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_28[0]          |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[4]_37[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_36[0]          |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[6]_10[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_41[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_42[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_40[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[6]_11[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[6]_8[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_33[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_34[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_44[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_32[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[6]_7[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_4[0]           |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_43[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[6]_12[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_8[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_37[0]          |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[6]_3[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_9[0]           |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[6]_0[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[6]_1[0]           |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_38[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_39[0]          |                                      |                5 |              8 |         1.60 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[6][0]             |                                      |                6 |              8 |         1.33 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[6]_14[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[6]_2[0]           |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_5[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[6]_13[0]          |                                      |                3 |              8 |         2.67 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[6]_9[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_6[0]           |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[6]_4[0]           |                                      |                4 |              8 |         2.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_35[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_7[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_46[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[6]_5[0]           |                                      |                1 |              8 |         8.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[5]_45[0]          |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  | u_rx/write_cnt_reg[6]_6[0]           |                                      |                2 |              8 |         4.00 |
+|  clk_sys_BUFG  |                                      | btnC_IBUF                            |                7 |              9 |         1.29 |
+|  clk_sys_BUFG  | u_rx/tx_step_reg[2]_0[0]             | btnC_IBUF                            |                3 |              9 |         3.00 |
+|  clk_sys_BUFG  | u_core/pixel_cnt[8]_i_1_n_0          | btnC_IBUF                            |                7 |             13 |         1.86 |
+|  clk_sys_BUFG  | u_core/cand_y                        | btnC_IBUF                            |                4 |             14 |         3.50 |
+|  clk_sys_BUFG  | u_core/center_y                      | btnC_IBUF                            |                4 |             14 |         3.50 |
+|  clk_sys_BUFG  | u_rx/r_Clock_Count                   | u_rx/r_Clock_Count[15]_i_1_n_0       |                4 |             15 |         3.75 |
+|  clk_sys_BUFG  | u_core/current_accum_sad[15]_i_2_n_0 | u_core/current_accum_sad[15]_i_1_n_0 |                3 |             16 |         5.33 |
+|  clk_sys_BUFG  | u_core/mv_x[5]_i_1_n_0               | btnC_IBUF                            |               12 |             28 |         2.33 |
+|  clk_sys_BUFG  | u_core/best_cand_x[6]_i_1_n_0        | btnC_IBUF                            |                4 |             30 |         7.50 |
+|  clk_sys_BUFG  | u_core/E[0]                          | btnC_IBUF                            |               15 |             40 |         2.67 |
+|  clk_sys_BUFG  |                                      |                                      |               17 |             45 |         2.65 |
++----------------+--------------------------------------+--------------------------------------+------------------+----------------+--------------+
+
+

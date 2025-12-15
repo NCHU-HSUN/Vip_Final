@@ -1,5 +1,13 @@
 `timescale 1ns/1ps
 
+`ifndef WAVEFILE
+`define WAVEFILE "waveform.vcd"
+`endif
+
+`ifndef ENABLE_WAVE_DUMP_DEFAULT
+`define ENABLE_WAVE_DUMP_DEFAULT 0
+`endif
+
 module tb_system_verify;
 
     // ==========================================
@@ -124,9 +132,9 @@ module tb_system_verify;
                     $finish;
                 end
                 
-                // 比對 MV
-                if (hw_mv_x !== exp_mv_x || hw_mv_y !== exp_mv_y) begin
-                    // [FAIL] 情況，格式維持原樣
+                // 比對 MV 與 SAD，任一不符即視為失敗
+                if (hw_mv_x !== exp_mv_x || hw_mv_y !== exp_mv_y || hw_sad !== exp_sad) begin
+                    // [FAIL] 情況，格式維持原樣 (同時顯示 SAD 供除錯)
                     $display("[FAIL] MB(%3d, %3d) | Exp MV:(%2d, %2d) | HW MV:(%2d, %2d) | SAD Exp:%5d HW:%5d", 
                              exp_mb_row, exp_mb_col, exp_mv_x, exp_mv_y, hw_mv_x, hw_mv_y, exp_sad, hw_sad);
                     err_count = err_count + 1;
@@ -155,6 +163,80 @@ module tb_system_verify;
         if (err_count == 0 && total_mbs > 0) $display("Result: PERFECT MATCH! (恭喜 HSUN)");
         else $display("Result: FAILED.");
         $display("--------------------------------------------");
+        
+        // --- 執行額外的邊界條件測試並存檔 ---
+        run_boundary_tests();
+
         $finish;
     end
+
+    // ==========================================
+    // 5. 新增功能：邊界與特定狀況測試 (含波形存檔)
+    // ==========================================
+    task run_boundary_tests;
+        integer i, r, c;
+        reg [7:0] pixel_val;
+        begin
+            $display("\n[Extra Test] Starting Boundary Condition Tests (Waveform Enabled)...");
+            
+            // 1. 啟用波形存檔 (只存這一段)
+            $dumpfile("waveform_boundary.vcd");
+            $dumpvars(0, tb_system_verify);
+
+            // 重置記憶體指標 (使用記憶體前段作為測試區)
+            ref_frame_start = 0;
+            cur_frame_start = FRAME_SIZE;
+            cur_mb_x = 10; // 選擇中間一點的位置避免邊界問題干擾觀察
+            cur_mb_y = 10;
+
+            // -------------------------------------------------------
+            // 測試狀況 A: 靜止畫面 (Zero Motion)
+            // 預期結果: MV=(0,0), SAD=0
+            // -------------------------------------------------------
+            $display("[Extra Test] Case A: Zero Motion (Static Pattern)");
+            // 填入簡單的測試圖樣 (全部填 100)
+            for (i = 0; i < FRAME_SIZE*2; i = i + 1) dram_mem[i] = 8'd100;
+
+            // 執行 DUT
+            @(posedge clk); start = 1;
+            @(posedge clk); start = 0;
+            wait(done);
+            $display("    -> Result: MV=(%d, %d), SAD=%d", hw_mv_x, hw_mv_y, hw_sad);
+
+            // -------------------------------------------------------
+            // 測試狀況 B: 移動測試 (Motion Test)
+            // 模擬物體向右下方移動 (MV應該接近正值)
+            // -------------------------------------------------------
+            $display("[Extra Test] Case B: Motion Test (Object Moved)");
+            
+            // 清空背景為 0
+            for (i = 0; i < FRAME_SIZE*2; i = i + 1) dram_mem[i] = 8'd0;
+
+            // 在 Reference Frame 的 (MB_X, MB_Y) 畫一個亮塊 (值255)
+            // 座標轉換: addr = start + (y*width) + x
+            for (r = 0; r < 16; r = r + 1) begin
+                for (c = 0; c < 16; c = c + 1) begin
+                    dram_mem[ref_frame_start + (cur_mb_y*16 + r)*FRAME_WIDTH + (cur_mb_x*16 + c)] = 8'd255;
+                end
+            end
+
+            // 在 Current Frame 的 (MB_X+5, MB_Y+3) 畫同樣的亮塊 -> 預期 MV 約為 (5, 3)
+            for (r = 0; r < 16; r = r + 1) begin
+                for (c = 0; c < 16; c = c + 1) begin
+                    dram_mem[cur_frame_start + (cur_mb_y*16 + 3 + r)*FRAME_WIDTH + (cur_mb_x*16 + 5 + c)] = 8'd255;
+                end
+            end
+
+            // 執行 DUT
+            @(posedge clk); start = 1;
+            @(posedge clk); start = 0;
+            wait(done);
+            $display("    -> Result: MV=(%d, %d), SAD=%d", hw_mv_x, hw_mv_y, hw_sad);
+
+            // 關閉波形
+            $dumpoff;
+            $display("[Extra Test] Done. Waveform saved to 'waveform_boundary.vcd'\n");
+        end
+    endtask
+
 endmodule
