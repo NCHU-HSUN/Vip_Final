@@ -132,9 +132,9 @@ module tb_system_verify;
                     $finish;
                 end
                 
-                // 比對 MV
-                if (hw_mv_x !== exp_mv_x || hw_mv_y !== exp_mv_y) begin
-                    // [FAIL] 情況，格式維持原樣
+                // 比對 MV 與 SAD，任一不符即視為失敗
+                if (hw_mv_x !== exp_mv_x || hw_mv_y !== exp_mv_y || hw_sad !== exp_sad) begin
+                    // [FAIL] 情況，格式維持原樣 (同時顯示 SAD 供除錯)
                     $display("[FAIL] MB(%3d, %3d) | Exp MV:(%2d, %2d) | HW MV:(%2d, %2d) | SAD Exp:%5d HW:%5d", 
                              exp_mb_row, exp_mb_col, exp_mv_x, exp_mv_y, hw_mv_x, hw_mv_y, exp_sad, hw_sad);
                     err_count = err_count + 1;
