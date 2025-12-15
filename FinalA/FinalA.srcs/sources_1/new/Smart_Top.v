@@ -59,14 +59,14 @@ module Smart_Top (
     // ==========================================
     // 5. RAM 與資料寄存
     // ==========================================
-    (* ram_style = "block" *)
-    reg [7:0] ref_mem [0:FRAME_PIXELS-1]; // 參考 Frame 緩衝
-    (* ram_style = "block" *)
-    reg [7:0] cur_mem [0:FRAME_PIXELS-1]; // 當前 Frame 緩衝
     reg        frame_wr_en;
     reg [FRAME_ADDR_WIDTH-1:0] frame_wr_addr;
     reg [7:0]  frame_wr_data;
     reg        frame_wr_sel_cur;
+    wire       cur_we;
+    wire       ref_we;
+    wire [7:0] cur_bram_dout;
+    wire [7:0] ref_bram_dout;
 
     reg [FRAME_ADDR_WIDTH-1:0] frame_byte_cnt;
     reg [1:0]  mb_header_idx;
@@ -99,6 +99,8 @@ module Smart_Top (
     reg        mem_sel_cur_d;
     reg [FRAME_ADDR_WIDTH-1:0] mem_rd_addr_d;
     reg        mem_addr_valid_d;
+    reg        mem_sel_cur_q;
+    reg        mem_addr_valid_q;
 
     // ==========================================
     // 6. 輔助函式
@@ -293,16 +295,6 @@ module Smart_Top (
     wire [31:0] ref_offset = mem_addr - REF_BASE_ADDR;
     wire [FRAME_ADDR_WIDTH-1:0] ref_idx = ref_offset[FRAME_ADDR_WIDTH-1:0];
 
-    // 實體寫入 Block RAM
-    always @(posedge clk_sys) begin
-        if (frame_wr_en) begin
-            if (frame_wr_sel_cur)
-                cur_mem[frame_wr_addr] <= frame_wr_data;
-            else
-                ref_mem[frame_wr_addr] <= frame_wr_data;
-        end
-    end
-
     // 將地址與來源記錄為同步訊號，確保推導為真正的 dual-port BRAM
     always @(posedge clk_sys or negedge rst_n) begin
         if (!rst_n) begin
@@ -320,15 +312,27 @@ module Smart_Top (
         end
     end
 
+    // 對齊 BRAM 讀取延遲
+    always @(posedge clk_sys or negedge rst_n) begin
+        if (!rst_n) begin
+            mem_sel_cur_q    <= 1'b1;
+            mem_addr_valid_q <= 1'b0;
+        end else begin
+            mem_sel_cur_q    <= mem_sel_cur_d;
+            mem_addr_valid_q <= mem_addr_valid_d;
+        end
+    end
+
+    // 讀資料 mux
     always @(posedge clk_sys or negedge rst_n) begin
         if (!rst_n) begin
             mem_rdata_reg <= 8'h00;
-        end else if (!mem_addr_valid_d) begin
+        end else if (!mem_addr_valid_q) begin
             mem_rdata_reg <= 8'h00;
-        end else if (mem_sel_cur_d) begin
-            mem_rdata_reg <= cur_mem[mem_rd_addr_d];
+        end else if (mem_sel_cur_q) begin
+            mem_rdata_reg <= cur_bram_dout;
         end else begin
-            mem_rdata_reg <= ref_mem[mem_rd_addr_d];
+            mem_rdata_reg <= ref_bram_dout;
         end
     end
 
@@ -373,7 +377,73 @@ module Smart_Top (
     );
 
     // ==========================================
-    // 10. LED 儀表板
+    // 10. Frame buffer BRAM
+    // ==========================================
+    assign cur_we = frame_wr_en && frame_wr_sel_cur;
+    assign ref_we = frame_wr_en && !frame_wr_sel_cur;
+
+    // Current frame buffer
+    xpm_memory_sdpram #(
+        .MEMORY_PRIMITIVE("block"),
+        .CLOCKING_MODE("common_clock"),
+        .MEMORY_SIZE(FRAME_PIXELS*8),
+        .ADDR_WIDTH_A(FRAME_ADDR_WIDTH),
+        .ADDR_WIDTH_B(FRAME_ADDR_WIDTH),
+        .WRITE_DATA_WIDTH_A(8),
+        .READ_DATA_WIDTH_B(8),
+        .READ_LATENCY_B(1),
+        .WRITE_MODE_B("read_first")
+    ) u_cur_bram (
+        .clka(clk_sys),
+        .ena(1'b1),
+        .wea(cur_we),
+        .addra(frame_wr_addr),
+        .dina(frame_wr_data),
+        .clkb(clk_sys),
+        .enb(mem_addr_valid_d && mem_sel_cur_d),
+        .addrb(mem_rd_addr_d),
+        .doutb(cur_bram_dout),
+        .rstb(!rst_n),
+        .regceb(1'b1),
+        .sleep(1'b0),
+        .injectdbiterra(1'b0),
+        .injectsbiterra(1'b0),
+        .dbiterrb(),
+        .sbiterrb()
+    );
+
+    // Reference frame buffer
+    xpm_memory_sdpram #(
+        .MEMORY_PRIMITIVE("block"),
+        .CLOCKING_MODE("common_clock"),
+        .MEMORY_SIZE(FRAME_PIXELS*8),
+        .ADDR_WIDTH_A(FRAME_ADDR_WIDTH),
+        .ADDR_WIDTH_B(FRAME_ADDR_WIDTH),
+        .WRITE_DATA_WIDTH_A(8),
+        .READ_DATA_WIDTH_B(8),
+        .READ_LATENCY_B(1),
+        .WRITE_MODE_B("read_first")
+    ) u_ref_bram (
+        .clka(clk_sys),
+        .ena(1'b1),
+        .wea(ref_we),
+        .addra(frame_wr_addr),
+        .dina(frame_wr_data),
+        .clkb(clk_sys),
+        .enb(mem_addr_valid_d && !mem_sel_cur_d),
+        .addrb(mem_rd_addr_d),
+        .doutb(ref_bram_dout),
+        .rstb(!rst_n),
+        .regceb(1'b1),
+        .sleep(1'b0),
+        .injectdbiterra(1'b0),
+        .injectsbiterra(1'b0),
+        .dbiterrb(),
+        .sbiterrb()
+    );
+
+    // ==========================================
+    // 11. LED 儀表板
     // ==========================================
     assign led[15:8] = {2'b00, latch_mv_x};
     assign led[7:0]  = {2'b00, latch_mv_y};

@@ -44,12 +44,14 @@ module hexbs_top (
     reg signed [6:0] center_x, center_y;
     reg signed [6:0] shex_center_x, shex_center_y;
     reg signed [6:0] cand_x, cand_y;     
-    reg [8:0] pixel_cnt; 
+    reg [8:0] pixel_cnt;
     reg [8:0] pixel_cnt_d1;
     reg [8:0] pixel_cnt_d2;
-    reg [3:0] point_cnt; 
+    reg [8:0] pixel_cnt_d3;
+    reg [3:0] point_cnt;
     reg shex_load;
-    reg [1:0]  mem_pipe_cnt;
+    reg        pixel_active;
+    reg [2:0]  mem_pipe_cnt;
     
     // SAD 計算相關
     reg [15:0] current_accum_sad;
@@ -97,8 +99,8 @@ module hexbs_top (
     wire bound_ok;
     wire [15:0] sad_final_check;
 
-    wire        mem_sample_ready = (mem_pipe_cnt == 2'd2);
-    wire [7:0]  cur_mb_sample = cur_mb_mem[pixel_cnt_d2[7:0]];
+    wire        mem_sample_ready = mem_pipe_cnt[2]; // Smart_Top adds 3-cycle latency到 mem_rdata
+    wire [7:0]  cur_mb_sample = cur_mb_mem[pixel_cnt_d3[7:0]];
 
     assign current_diff = abs_diff(cur_mb_sample, mem_rdata);
     assign sad_accum_next = current_accum_sad + current_diff;
@@ -117,10 +119,12 @@ module hexbs_top (
             pixel_cnt <= 0;
             pixel_cnt_d1 <= 0;
             pixel_cnt_d2 <= 0;
+            pixel_cnt_d3 <= 0;
             point_cnt <= 0;
             center_x <= 0; center_y <= 0;
             shex_center_x <= 0; shex_center_y <= 0;
             shex_load <= 0;
+            pixel_active <= 0;
             min_sad_reg <= 16'hFFFF;
             mv_x <= 0; mv_y <= 0; sad <= 0;
             cand_x <= 0; cand_y <= 0;
@@ -135,29 +139,38 @@ module hexbs_top (
                         pixel_cnt <= 0;
                         pixel_cnt_d1 <= 0;
                         pixel_cnt_d2 <= 0;
+                        pixel_cnt_d3 <= 0;
+                        pixel_active <= 1;
                         mem_pipe_cnt <= 0;
                     end
                 end
 
                 S_LOAD_CUR: begin
+                    mem_pipe_cnt <= {mem_pipe_cnt[1:0], pixel_active}; // 3-cycle latency align
                     pixel_cnt_d1 <= pixel_cnt;
                     pixel_cnt_d2 <= pixel_cnt_d1;
-                    if (!mem_sample_ready) begin
-                        mem_pipe_cnt <= mem_pipe_cnt + 1'b1;
-                    end else begin
-                        cur_mb_mem[pixel_cnt_d2[7:0]] <= mem_rdata;
+                    pixel_cnt_d3 <= pixel_cnt_d2;
+
+                    if (mem_sample_ready)
+                        cur_mb_mem[pixel_cnt_d3[7:0]] <= mem_rdata;
+
+                    if (pixel_active) begin
+                        if (pixel_cnt == 9'd255)
+                            pixel_active <= 0;
+                        else
+                            pixel_cnt <= pixel_cnt + 1'b1;
                     end
 
-                    if (mem_sample_ready && pixel_cnt_d2 == 9'd255) begin
+                    if (mem_sample_ready && pixel_cnt_d3 == 9'd255) begin
                         state <= S_L_HEX_INIT;
                         center_x <= 0; center_y <= 0;
                         min_sad_reg <= 16'hFFFF;
                         pixel_cnt <= 0;
                         pixel_cnt_d1 <= 0;
                         pixel_cnt_d2 <= 0;
+                        pixel_cnt_d3 <= 0;
+                        pixel_active <= 1;
                         mem_pipe_cnt <= 0;
-                    end else if (pixel_cnt != 9'd255) begin
-                        pixel_cnt <= pixel_cnt + 1;
                     end
                 end
 
@@ -167,6 +180,8 @@ module hexbs_top (
                     pixel_cnt <= 0;
                     pixel_cnt_d1 <= 0;
                     pixel_cnt_d2 <= 0;
+                    pixel_cnt_d3 <= 0;
+                    pixel_active <= 1;
                     mem_pipe_cnt <= 0;
                     current_accum_sad <= 0;
                     best_point_idx <= 0;
@@ -176,18 +191,26 @@ module hexbs_top (
                 end
 
                 S_L_HEX_CALC: begin
+                    mem_pipe_cnt <= {mem_pipe_cnt[1:0], pixel_active};
                     pixel_cnt_d1 <= pixel_cnt;
                     pixel_cnt_d2 <= pixel_cnt_d1;
-                    if (!mem_sample_ready) begin
-                        mem_pipe_cnt <= mem_pipe_cnt + 1'b1;
-                    end else begin
+                    pixel_cnt_d3 <= pixel_cnt_d2;
+
+                    if (pixel_active) begin
+                        if (pixel_cnt == 9'd255)
+                            pixel_active <= 0;
+                        else
+                            pixel_cnt <= pixel_cnt + 1'b1;
+                    end
+
+                    if (mem_sample_ready) begin
                         if (bound_ok)
                             current_accum_sad <= sad_accum_next;
                         else
                             current_accum_sad <= 16'hFFFF;
                     end
 
-                    if (mem_sample_ready && pixel_cnt_d2 == 9'd255) begin
+                    if (mem_sample_ready && pixel_cnt_d3 == 9'd255) begin
 `ifdef HEXBS_DEBUG
                         if ((mb_x_pos == 0 && (mb_y_pos == 0 || mb_y_pos == 16)) ||
                             (mb_x_pos == 64 && mb_y_pos == 16))
@@ -214,14 +237,13 @@ module hexbs_top (
                             pixel_cnt <= 0;
                             pixel_cnt_d1 <= 0;
                             pixel_cnt_d2 <= 0;
+                            pixel_active <= 1;
                             mem_pipe_cnt <= 0;
                             current_accum_sad <= 0;
                             // === 預先計算下一個點 ===
                             cand_x <= center_x + l_hex_off_x[point_cnt + 1];
                             cand_y <= center_y + l_hex_off_y[point_cnt + 1];
                         end
-                    end else if (pixel_cnt != 9'd255) begin
-                        pixel_cnt <= pixel_cnt + 1;
                     end
                 end
 
@@ -241,6 +263,8 @@ module hexbs_top (
                     pixel_cnt <= 0;
                     pixel_cnt_d1 <= 0;
                     pixel_cnt_d2 <= 0;
+                    pixel_cnt_d3 <= 0;
+                    pixel_active <= 1;
                     mem_pipe_cnt <= 0;
                     current_accum_sad <= 0;
                     shex_center_x <= center_x;
@@ -255,22 +279,32 @@ module hexbs_top (
                         pixel_cnt <= 0;
                         pixel_cnt_d1 <= 0;
                         pixel_cnt_d2 <= 0;
+                        pixel_cnt_d3 <= 0;
+                        pixel_active <= 1;
                         current_accum_sad <= 0;
                         mem_pipe_cnt <= 0;
                         shex_load <= 0;
                     end else begin
+                        mem_pipe_cnt <= {mem_pipe_cnt[1:0], pixel_active};
                         pixel_cnt_d1 <= pixel_cnt;
                         pixel_cnt_d2 <= pixel_cnt_d1;
-                        if (!mem_sample_ready) begin
-                            mem_pipe_cnt <= mem_pipe_cnt + 1'b1;
-                        end else begin
+                        pixel_cnt_d3 <= pixel_cnt_d2;
+
+                        if (pixel_active) begin
+                            if (pixel_cnt == 9'd255)
+                                pixel_active <= 0;
+                            else
+                                pixel_cnt <= pixel_cnt + 1'b1;
+                        end
+
+                        if (mem_sample_ready) begin
                             if (bound_ok)
                                 current_accum_sad <= sad_accum_next;
                             else
                                 current_accum_sad <= 16'hFFFF;
                         end
 
-                        if (mem_sample_ready && pixel_cnt_d2 == 9'd255) begin
+                        if (mem_sample_ready && pixel_cnt_d3 == 9'd255) begin
 `ifdef HEXBS_DEBUG
                             if ((mb_x_pos == 0 && mb_y_pos == 0) || (mb_x_pos == 0 && mb_y_pos == 16) ||
                                 (mb_x_pos == 64 && mb_y_pos == 16))
@@ -292,11 +326,11 @@ module hexbs_top (
                                 pixel_cnt <= 0;
                                 pixel_cnt_d1 <= 0;
                                 pixel_cnt_d2 <= 0;
+                                pixel_cnt_d3 <= 0;
+                                pixel_active <= 1;
                                 mem_pipe_cnt <= 0;
                                 shex_load <= 1;
                             end
-                        end else if (pixel_cnt != 9'd255) begin
-                            pixel_cnt <= pixel_cnt + 1;
                         end
                     end
                 end
