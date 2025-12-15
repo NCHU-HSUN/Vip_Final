@@ -141,6 +141,51 @@ python FinalA/fpga_test.py --port COM10 --case-count 20
 
 執行腳本前請先用 `gen_golden.py` 產生最新的 golden patterns，並確認 FPGA 已燒錄最新版 bitstream。腳本輸出會同步列出 CPU 重新計算的 SAD（作為雙重驗證），也會列出任何不一致案例以便追蹤。
 
+### Basys 3 Reset 與燒錄 FAQ（實測必讀）
+
+這段流程解答「如何在 Basys 3/Nexys A7 上反覆測 HEXBS、並讓程式斷電後保留？」的共通疑問。
+
+#### 快速摘要
+
+1. **重置方式：** 推薦自行設計「軟重置」按鈕控制 `rst`，必要時才用板上紅色 `PROG`。
+2. **斷電保留：** 只有把 bitstream 轉 `.bin` 並燒進 QSPI Flash 才會記住程式。
+3. **JP1 跳線：** 若要上電自啟動 HEXBS，務必把 JP1 從預設 JTAG 改到 **QSPI** 位置。
+
+---
+
+#### 反覆測試（Reset）
+
+- **軟重置 (Soft Reset)：** 在 top module 中把 `btnC`/`btnU` 對應到 `rst`，按住時 FSM 回到 IDLE、暫存器清空，放開立即重新開始演算法，無須重新燒錄。
+- **硬重置 (Hard Reset)：** 板上的紅色 `PROG` 會清空 FPGA 並重新讀程式；若沒把設計燒進 Flash，放開後板子會變空，需要再接電腦 Program Device。
+
+---
+
+#### 斷電仍保存（燒進 QSPI Flash）
+
+1. **生成 `.bin`：** `Settings → Bitstream` 勾 `-bin_file`，重新 `Generate Bitstream` 後會同時產生 `.bit`/`.bin`。
+2. **選 Flash 型號：** Hardware Manager 右鍵 `xc7a35t_0 → Add Configuration Memory Device`，搜尋 `s25fl032p-spi-x1_x2_x4` 並套用。
+3. **燒錄 `.bin`：** 在對話框選取 `.bin` 檔開始寫入，過程約數十秒。
+
+---
+
+#### 最後一步：JP1 轉到 QSPI（務必確認）
+
+Basys 3 的 JP1 跳線控制開機載入來源：預設插在下兩針（JTAG），只會等待 USB 指令。**完成 Flash 燒錄後一定要把 JP1 插到上兩針（QSPI），上電才會自動抓剛寫入的 `.bin`，不用連電腦就能 Demo。**
+
+- **JTAG（下兩針）：** 通電後空等，適合開發時使用 Vivado 即時下載。
+- **QSPI（上兩針）：** 通電立即從 Flash 執行，可配行動電源展示。
+
+> **建議：** 寫完 Flash 立即調整 JP1→QSPI，斷電重上電驗證 HEXBS 是否自動啟動；平常測試再利用軟重置即可。
+
+---
+
+#### 綜合操作流程
+
+1. 透過上面流程取得 `.bin` 並寫入 QSPI Flash。  
+2. 關閉電源，把 JP1 改到 **QSPI**。  
+3. 再次上電或接行動電源，HEXBS 會自動啟動；需要重新燒錄才按 `PROG` 或用 Vivado。  
+4. 測試迭代時，多利用「軟重置」重跑演算法，可節省大量時間。
+
 ## 相關參考
 
 - `VLSI_Architecture_Design_of_Motion_Estimation_Block_with_Hexagon-Diamond_Search_Pattern_for_Real-Time_Video_Processing.pdf`：理論背景。
