@@ -11,17 +11,21 @@ module Smart_Top (
     // ==========================================
     // 1. 參數與常數
     // ==========================================
-    localparam integer UART_CLKS      = 108;    // 100MHz / 921600 ~= 108
-    localparam integer WINDOW_SIZE    = 80;
-    localparam integer WINDOW_PIXELS  = WINDOW_SIZE * WINDOW_SIZE; // 6400
-    localparam integer MB_SIZE        = 16;
-    localparam [6:0] MAX_MB_OFFSET    = WINDOW_SIZE - MB_SIZE;     // 64
-    localparam [31:0] FRAME_BASE_ADDR = 32'd0;
-    localparam [31:0] REF_BASE_ADDR   = 32'd8192;
+    localparam integer UART_CLKS       = 108;    // 100MHz / 921600 ~= 108
+    localparam integer FRAME_WIDTH     = 352;
+    localparam integer FRAME_HEIGHT    = 240;
+    localparam integer FRAME_PIXELS    = FRAME_WIDTH * FRAME_HEIGHT; // 84480
+    localparam integer FRAME_ADDR_WIDTH= $clog2(FRAME_PIXELS);
+    localparam integer MB_SIZE         = 16;
+    localparam [15:0] MAX_MB_X         = FRAME_WIDTH - MB_SIZE;
+    localparam [15:0] MAX_MB_Y         = FRAME_HEIGHT - MB_SIZE;
+    localparam [31:0] FRAME_BASE_ADDR  = 32'd0;
+    localparam [31:0] REF_BASE_ADDR    = FRAME_BASE_ADDR + FRAME_PIXELS;
 
-    localparam [7:0] CMD_LOAD_WINDOW = "W";
-    localparam [7:0] CMD_LOAD_CUR    = "C";
-    localparam [7:0] ACK_BYTE        = "K";
+    localparam [7:0] CMD_LOAD_REF = "R";
+    localparam [7:0] CMD_LOAD_CUR = "F";
+    localparam [7:0] CMD_RUN_CASE = "C";
+    localparam [7:0] ACK_BYTE     = "K";
 
     // ==========================================
     // 2. 時脈與 GPIO
@@ -39,20 +43,16 @@ module Smart_Top (
     wire       tx_active;
     wire       tx_done;
 
-    reg        echo_pending;
-    reg [7:0]  echo_byte;
-
     // ==========================================
     // 4. 狀態機定義
     // ==========================================
-    localparam S_WAIT_CMD      = 3'd0;
-    localparam S_RX_WIN_HEADER = 3'd1;
-    localparam S_RX_WIN_DATA   = 3'd2;
-    localparam S_RX_CUR_HEADER = 3'd3;
-    localparam S_RX_CUR_DATA   = 3'd4;
-    localparam S_CALC          = 3'd5;
-    localparam S_TX_SEND       = 3'd6;
-    localparam S_TX_WAIT_ACK   = 3'd7;
+    localparam S_WAIT_CMD       = 3'd0;
+    localparam S_RX_FRAME_HEADER= 3'd1;
+    localparam S_RX_FRAME_DATA  = 3'd2;
+    localparam S_RX_MB_HEADER   = 3'd3;
+    localparam S_CALC           = 3'd4;
+    localparam S_TX_SEND        = 3'd5;
+    localparam S_TX_WAIT_ACK    = 3'd6;
 
     reg [2:0] state;
 
@@ -60,26 +60,24 @@ module Smart_Top (
     // 5. RAM 與資料寄存
     // ==========================================
     (* ram_style = "block" *)
-    reg [7:0] ref_mem [0:WINDOW_PIXELS-1]; // 參考視窗 (80x80)
+    reg [7:0] ref_mem [0:FRAME_PIXELS-1]; // 參考 Frame 緩衝
     (* ram_style = "block" *)
-    reg [7:0] cur_mem [0:WINDOW_PIXELS-1]; // 當前 Frame 的對應範圍
-    reg        ref_wr_en;
-    reg [12:0] ref_wr_addr;
-    reg [7:0]  ref_wr_data;
-    reg        cur_wr_en;
-    reg [12:0] cur_wr_addr;
-    reg [7:0]  cur_wr_data;
+    reg [7:0] cur_mem [0:FRAME_PIXELS-1]; // 當前 Frame 緩衝
+    reg        frame_wr_en;
+    reg [FRAME_ADDR_WIDTH-1:0] frame_wr_addr;
+    reg [7:0]  frame_wr_data;
+    reg        frame_wr_sel_cur;
 
-    reg [12:0] window_cnt;
-    reg [8:0]  cur_cnt;
-
-    reg [1:0]  header_idx;
+    reg [FRAME_ADDR_WIDTH-1:0] frame_byte_cnt;
+    reg [1:0]  mb_header_idx;
+    reg [1:0]  frame_header_idx;
     reg [15:0] temp_x;
     reg [15:0] temp_y;
 
-    reg [15:0] window_base_x, window_base_y;
-    reg [6:0]  rel_mb_x, rel_mb_y;
-    reg        window_loaded;
+    reg        load_cur_frame;
+    reg        ref_frame_ready;
+    reg        cur_frame_ready;
+    reg        cmd_ack_pending;
 
     // 給 HEXBS 的參數
     reg        hex_start;
@@ -99,193 +97,140 @@ module Smart_Top (
 
     // 已同步化的 BRAM 讀取控制
     reg        mem_sel_cur_d;
-    reg [12:0] mem_rd_addr_d;
+    reg [FRAME_ADDR_WIDTH-1:0] mem_rd_addr_d;
     reg        mem_addr_valid_d;
 
     // ==========================================
     // 6. 輔助函式
     // ==========================================
-    function [6:0] clamp_offset;
+    function [15:0] clamp_coord;
         input [15:0] value;
-        input [15:0] base;
-        reg [15:0] diff;
+        input [15:0] max_value;
         begin
-            if (value <= base) diff = 0;
-            else diff = value - base;
-
-            if (diff > MAX_MB_OFFSET)
-                clamp_offset = MAX_MB_OFFSET;
+            if (value > max_value)
+                clamp_coord = max_value;
             else
-                clamp_offset = diff[6:0];
+                clamp_coord = value;
         end
     endfunction
-
-    function [12:0] win_index;
-        input [6:0] row;
-        input [6:0] col;
-        begin
-            win_index = row * WINDOW_SIZE + col;
-        end
-    endfunction
-
-    // 需要 echo 的狀態
-    wire need_echo = (state == S_WAIT_CMD)      ||
-                     (state == S_RX_WIN_HEADER) ||
-                     (state == S_RX_WIN_DATA)   ||
-                     (state == S_RX_CUR_HEADER) ||
-                     (state == S_RX_CUR_DATA);
 
     // ==========================================
     // 7. 主控制邏輯
     // ==========================================
     always @(posedge clk_sys or negedge rst_n) begin
         if (!rst_n) begin
-            state         <= S_WAIT_CMD;
-            tx_dv         <= 0;
-            tx_byte       <= 0;
-            echo_pending  <= 0;
-            window_cnt    <= 0;
-            cur_cnt       <= 0;
-            header_idx    <= 0;
-            temp_x        <= 0;
-            temp_y        <= 0;
-            window_base_x <= 0;
-            window_base_y <= 0;
-            rel_mb_x      <= 0;
-            rel_mb_y      <= 0;
-            window_loaded <= 0;
-            mb_x_pos_reg  <= 0;
-            mb_y_pos_reg  <= 0;
-            latch_mv_x    <= 0;
-            latch_mv_y    <= 0;
-            latch_sad     <= 0;
-            tx_step       <= 0;
-            ref_wr_en     <= 0;
-            ref_wr_addr   <= 0;
-            ref_wr_data   <= 0;
-            cur_wr_en     <= 0;
-            cur_wr_addr   <= 0;
-            cur_wr_data   <= 0;
+            state            <= S_WAIT_CMD;
+            tx_dv            <= 0;
+            tx_byte          <= 0;
+            frame_wr_en      <= 0;
+            frame_wr_addr    <= 0;
+            frame_wr_data    <= 0;
+            frame_wr_sel_cur <= 0;
+            frame_byte_cnt   <= 0;
+            frame_header_idx <= 0;
+            mb_header_idx    <= 0;
+            temp_x           <= 0;
+            temp_y           <= 0;
+            load_cur_frame   <= 0;
+            ref_frame_ready  <= 0;
+            cur_frame_ready  <= 0;
+            cmd_ack_pending  <= 0;
+            mb_x_pos_reg     <= 0;
+            mb_y_pos_reg     <= 0;
+            latch_mv_x       <= 0;
+            latch_mv_y       <= 0;
+            latch_sad        <= 0;
+            tx_step          <= 0;
         end else begin
-            tx_dv <= 0;
-            ref_wr_en <= 0;
-            cur_wr_en <= 0;
+            tx_dv      <= 0;
+            frame_wr_en<= 0;
 
-            // Echo 管理
-            if (need_echo && rx_dv) begin
-                echo_pending <= 1;
-                echo_byte    <= rx_byte;
-            end
-
-            if (echo_pending && !tx_active &&
+            if (cmd_ack_pending && !tx_active &&
                 state != S_TX_SEND && state != S_TX_WAIT_ACK) begin
-                tx_byte      <= echo_byte;
-                tx_dv        <= 1;
-                echo_pending <= 0;
+                tx_byte         <= ACK_BYTE;
+                tx_dv           <= 1;
+                cmd_ack_pending <= 0;
             end
 
             case (state)
-                // ------------------------------------------
                 S_WAIT_CMD: begin
                     if (rx_dv) begin
-                        if (rx_byte == CMD_LOAD_WINDOW) begin
-                            header_idx    <= 0;
-                            window_cnt    <= 0;
-                            window_loaded <= 0;
-                            state         <= S_RX_WIN_HEADER;
+                        if (rx_byte == CMD_LOAD_REF) begin
+                            load_cur_frame   <= 1'b0;
+                            ref_frame_ready  <= 1'b0;
+                            frame_header_idx <= 0;
+                            frame_byte_cnt   <= 0;
+                            state            <= S_RX_FRAME_HEADER;
                         end else if (rx_byte == CMD_LOAD_CUR) begin
-                            header_idx <= 0;
-                            cur_cnt    <= 0;
-                            state      <= S_RX_CUR_HEADER;
+                            load_cur_frame   <= 1'b1;
+                            cur_frame_ready  <= 1'b0;
+                            frame_header_idx <= 0;
+                            frame_byte_cnt   <= 0;
+                            state            <= S_RX_FRAME_HEADER;
+                        end else if (rx_byte == CMD_RUN_CASE) begin
+                            mb_header_idx <= 0;
+                            state         <= S_RX_MB_HEADER;
                         end
                     end
                 end
 
-                // ------------------------------------------
-                S_RX_WIN_HEADER: begin
+                S_RX_FRAME_HEADER: begin
                     if (rx_dv) begin
-                        case (header_idx)
-                            2'd0: temp_x[7:0]  <= rx_byte;
-                            2'd1: temp_x[15:8] <= rx_byte;
-                            2'd2: temp_y[7:0]  <= rx_byte;
-                            2'd3: begin
-                                temp_y[15:8] <= rx_byte;
-                                window_base_x <= temp_x;
-                                window_base_y <= {rx_byte, temp_y[7:0]};
-                                header_idx    <= 0;
-                                state         <= S_RX_WIN_DATA;
-                            end
-                        endcase
-
-                        if (header_idx != 2'd3)
-                            header_idx <= header_idx + 1'b1;
-                    end
-                end
-
-                // ------------------------------------------
-                S_RX_WIN_DATA: begin
-                    if (rx_dv) begin
-                        ref_wr_en   <= 1;
-                        ref_wr_addr <= window_cnt;
-                        ref_wr_data <= rx_byte;
-                        if (window_cnt == WINDOW_PIXELS-1) begin
-                            window_loaded <= 1;
-                            state         <= S_WAIT_CMD;
-                            window_cnt    <= 0;
+                        if (frame_header_idx == 0) begin
+                            temp_x[7:0]      <= rx_byte;
+                            frame_header_idx <= 1;
                         end else begin
-                            window_cnt <= window_cnt + 1'b1;
+                            temp_x[15:8]     <= rx_byte;
+                            frame_header_idx <= 0;
+                            frame_byte_cnt   <= 0;
+                            state            <= S_RX_FRAME_DATA;
                         end
                     end
                 end
 
-                // ------------------------------------------
-                S_RX_CUR_HEADER: begin
+                S_RX_FRAME_DATA: begin
                     if (rx_dv) begin
-                        case (header_idx)
-                            2'd0: temp_x[7:0]  <= rx_byte;
-                            2'd1: temp_x[15:8] <= rx_byte;
-                            2'd2: temp_y[7:0]  <= rx_byte;
-                            2'd3: begin
-                                temp_y[15:8] <= rx_byte;
-                                rel_mb_x     <= clamp_offset(temp_x, window_base_x);
-                                rel_mb_y     <= clamp_offset({rx_byte, temp_y[7:0]}, window_base_y);
-                                mb_x_pos_reg <= clamp_offset(temp_x, window_base_x);
-                                mb_y_pos_reg <= clamp_offset({rx_byte, temp_y[7:0]}, window_base_y);
-                                header_idx   <= 0;
-                                cur_cnt      <= 0;
-                                state        <= S_RX_CUR_DATA;
-                            end
-                        endcase
-
-                        if (header_idx != 2'd3)
-                            header_idx <= header_idx + 1'b1;
-                    end
-                end
-
-                // ------------------------------------------
-                S_RX_CUR_DATA: begin
-                    if (rx_dv) begin
-                        // 依照相對座標寫入 80x80 當前 Frame 緩衝
-                        cur_wr_en   <= 1;
-                        cur_wr_addr <= win_index(
-                            rel_mb_y + {3'b000, cur_cnt[7:4]},
-                            rel_mb_x + {3'b000, cur_cnt[3:0]}
-                        );
-                        cur_wr_data <= rx_byte;
-
-                        if (cur_cnt == MB_SIZE*MB_SIZE-1) begin
-                            cur_cnt <= 0;
-                            if (window_loaded)
-                                state <= S_CALC;
+                        frame_wr_en      <= 1;
+                        frame_wr_addr    <= frame_byte_cnt;
+                        frame_wr_data    <= rx_byte;
+                        frame_wr_sel_cur <= load_cur_frame;
+                        if (frame_byte_cnt == FRAME_PIXELS-1) begin
+                            frame_byte_cnt <= 0;
+                            state          <= S_WAIT_CMD;
+                            if (load_cur_frame)
+                                cur_frame_ready <= 1;
                             else
-                                state <= S_WAIT_CMD;
+                                ref_frame_ready <= 1;
+                            cmd_ack_pending <= 1;
                         end else begin
-                            cur_cnt <= cur_cnt + 1'b1;
+                            frame_byte_cnt <= frame_byte_cnt + 1'b1;
                         end
                     end
                 end
 
-                // ------------------------------------------
+                S_RX_MB_HEADER: begin
+                    if (rx_dv) begin
+                        case (mb_header_idx)
+                            2'd0: temp_x[7:0]  <= rx_byte;
+                            2'd1: temp_x[15:8] <= rx_byte;
+                            2'd2: temp_y[7:0]  <= rx_byte;
+                            2'd3: begin
+                                temp_y[15:8] <= rx_byte;
+                                mb_x_pos_reg <= clamp_coord(temp_x, MAX_MB_X);
+                                mb_y_pos_reg <= clamp_coord({rx_byte, temp_y[7:0]}, MAX_MB_Y);
+                                if (ref_frame_ready && cur_frame_ready)
+                                    state <= S_CALC;
+                                else
+                                    state <= S_WAIT_CMD;
+                                mb_header_idx <= 0;
+                            end
+                        endcase
+
+                        if (mb_header_idx != 2'd3)
+                            mb_header_idx <= mb_header_idx + 1'b1;
+                    end
+                end
+
                 S_CALC: begin
                     if (hex_done) begin
                         latch_mv_x <= mv_x;
@@ -296,7 +241,6 @@ module Smart_Top (
                     end
                 end
 
-                // ------------------------------------------
                 S_TX_SEND: begin
                     if (!tx_active) begin
                         tx_dv <= 1;
@@ -311,7 +255,6 @@ module Smart_Top (
                     end
                 end
 
-                // ------------------------------------------
                 S_TX_WAIT_ACK: begin
                     if (rx_dv && rx_byte == ACK_BYTE) begin
                         if (tx_step == 2'd3) begin
@@ -346,35 +289,34 @@ module Smart_Top (
     // 8. 記憶體回應
     // ==========================================
     reg [7:0] mem_rdata_reg;
-    wire [12:0] cur_idx = mem_addr[12:0];
+    wire [FRAME_ADDR_WIDTH-1:0] cur_idx = mem_addr[FRAME_ADDR_WIDTH-1:0];
     wire [31:0] ref_offset = mem_addr - REF_BASE_ADDR;
-    wire [12:0] ref_idx = ref_offset[12:0];
+    wire [FRAME_ADDR_WIDTH-1:0] ref_idx = ref_offset[FRAME_ADDR_WIDTH-1:0];
 
     // 實體寫入 Block RAM
     always @(posedge clk_sys) begin
-        if (ref_wr_en)
-            ref_mem[ref_wr_addr] <= ref_wr_data;
-    end
-
-    always @(posedge clk_sys) begin
-        if (cur_wr_en)
-            cur_mem[cur_wr_addr] <= cur_wr_data;
+        if (frame_wr_en) begin
+            if (frame_wr_sel_cur)
+                cur_mem[frame_wr_addr] <= frame_wr_data;
+            else
+                ref_mem[frame_wr_addr] <= frame_wr_data;
+        end
     end
 
     // 將地址與來源記錄為同步訊號，確保推導為真正的 dual-port BRAM
     always @(posedge clk_sys or negedge rst_n) begin
         if (!rst_n) begin
             mem_sel_cur_d    <= 1'b1;
-            mem_rd_addr_d    <= 13'd0;
+            mem_rd_addr_d    <= {FRAME_ADDR_WIDTH{1'b0}};
             mem_addr_valid_d <= 1'b0;
         end else if (mem_addr < REF_BASE_ADDR) begin
             mem_sel_cur_d    <= 1'b1;
             mem_rd_addr_d    <= cur_idx;
-            mem_addr_valid_d <= (mem_addr < WINDOW_PIXELS);
+            mem_addr_valid_d <= (mem_addr < FRAME_PIXELS);
         end else begin
             mem_sel_cur_d    <= 1'b0;
             mem_rd_addr_d    <= ref_idx;
-            mem_addr_valid_d <= (ref_offset < WINDOW_PIXELS);
+            mem_addr_valid_d <= (ref_offset < FRAME_PIXELS);
         end
     end
 
@@ -412,8 +354,8 @@ module Smart_Top (
     );
 
     hexbs_top #(
-        .WIDTH (WINDOW_SIZE),
-        .HEIGHT(WINDOW_SIZE)
+        .WIDTH (FRAME_WIDTH),
+        .HEIGHT(FRAME_HEIGHT)
     ) u_core (
         .clk(clk_sys),
         .rst_n(rst_n),

@@ -3,6 +3,8 @@ import serial
 import time
 import re
 from array import array
+from collections import defaultdict
+from contextlib import contextmanager
 from pathlib import Path
 
 DEFAULT_COM_PORT = "COM10"
@@ -11,11 +13,11 @@ GOLDEN_HEX = Path("golden_patterns/full_video.hex")
 GOLDEN_TRACE = Path("golden_patterns/golden_trace.txt")
 
 MB_SIZE = 16
-SEARCH_RANGE = 32
-WINDOW_SIZE = MB_SIZE + 2 * SEARCH_RANGE  # 80
 
-CMD_LOAD_WINDOW = ord("W")
-CMD_LOAD_CUR = ord("C")
+CMD_LOAD_REF_FRAME = ord("R")
+CMD_LOAD_CUR_FRAME = ord("F")
+CMD_RUN_CASE = ord("C")
+ACK_BYTE = ord("K")
 
 TRACE_RE = re.compile(
     r"Frame=(\d+)\s+MB_Row=(\d+)\s+MB_Col=(\d+)\s+\|\s+MV_X=([-\d]+)\s+MV_Y=([-\d]+)\s+SAD=(\d+)"
@@ -130,43 +132,6 @@ def compute_sad(block_a, block_b):
     return sum(abs(a - b) for a, b in zip(block_a, block_b))
 
 
-def send_payload_with_echo(ser, data, label, progress_step=1024):
-    total = len(data)
-    print(f"傳送 {label} ({total} bytes)...")
-    for idx, value in enumerate(data, start=1):
-        byte = bytes([value])
-        ser.write(byte)
-        echo = ser.read(1)
-        if echo != byte:
-            raise RuntimeError(f"{label} 第 {idx-1} byte echo mismatch (sent {value:#04x}, got {echo})")
-        if progress_step and idx % progress_step == 0:
-            print(f"  -> {label} 進度 {idx}/{total}")
-    print(f"✓ {label} 傳送完成")
-
-
-def send_command(ser, cmd_byte, desc):
-    ser.write(bytes([cmd_byte]))
-    echo = ser.read(1)
-    if echo != bytes([cmd_byte]):
-        raise RuntimeError(f"{desc} 命令 echo mismatch (sent {cmd_byte:#04x}, got {echo})")
-
-
-def compute_window_base(mb_row, mb_col, width, height):
-    max_x = max(0, width - WINDOW_SIZE)
-    max_y = max(0, height - WINDOW_SIZE)
-    base_x = max(0, min(mb_col - SEARCH_RANGE, max_x))
-    base_y = max(0, min(mb_row - SEARCH_RANGE, max_y))
-    return base_x, base_y
-
-
-def extract_window(frame_pixels, width, base_x, base_y):
-    window = []
-    for r in range(WINDOW_SIZE):
-        row_offset = (base_y + r) * width + base_x
-        window.extend(frame_pixels[row_offset : row_offset + WINDOW_SIZE])
-    return window
-
-
 def extract_block(frame_pixels, width, mb_row, mb_col):
     block = []
     for r in range(MB_SIZE):
@@ -175,28 +140,96 @@ def extract_block(frame_pixels, width, mb_row, mb_col):
     return block
 
 
-def send_window(ser, base_x, base_y, window_bytes):
-    header = [
-        base_x & 0xFF,
-        (base_x >> 8) & 0xFF,
-        base_y & 0xFF,
-        (base_y >> 8) & 0xFF,
-    ]
-    send_command(ser, CMD_LOAD_WINDOW, "LOAD_WINDOW")
-    send_payload_with_echo(ser, header, "Window Header", progress_step=0)
-    send_payload_with_echo(ser, window_bytes, "Reference Window")
+class TimingTracker:
+    def __init__(self):
+        self.stats = defaultdict(list)
+        self.labels = {}
+
+    @contextmanager
+    def measure(self, key, detail=None, summary_label=None):
+        if summary_label and key not in self.labels:
+            self.labels[key] = summary_label
+        elif key not in self.labels:
+            self.labels[key] = summary_label or detail or key
+        start = time.perf_counter()
+        try:
+            yield
+        finally:
+            duration = time.perf_counter() - start
+            self.stats[key].append(duration)
+            label = detail or self.labels.get(key, key)
+            print(f"[時間] {label}: {duration:.3f}s")
+
+    def summary(self):
+        if not self.stats:
+            return
+        print("\n=== 時間統計摘要 ===")
+        for key, values in self.stats.items():
+            label = self.labels.get(key, key)
+            total = sum(values)
+            avg = total / len(values)
+            print(
+                f"{label}: 次數={len(values)}, 平均={avg:.3f}s, "
+                f"最長={max(values):.3f}s, 總計={total:.3f}s"
+            )
 
 
-def send_current_block(ser, mb_col, mb_row, block_bytes):
-    header = [
-        mb_col & 0xFF,
-        (mb_col >> 8) & 0xFF,
-        mb_row & 0xFF,
-        (mb_row >> 8) & 0xFF,
-    ]
-    send_command(ser, CMD_LOAD_CUR, "LOAD_CURRENT_BLOCK")
-    send_payload_with_echo(ser, header, "Current Block Header", progress_step=0)
-    send_payload_with_echo(ser, block_bytes, "Current Block")
+def wait_for_ack(ser, desc):
+    ack = ser.read(1)
+    if ack != bytes([ACK_BYTE]):
+        raise RuntimeError(f"{desc} 未收到 ACK (got {ack})")
+
+
+def write_all(ser, data, label, progress_step=8192):
+    if isinstance(data, memoryview):
+        view = data
+        own_view = False
+    else:
+        view = memoryview(data)
+        own_view = True
+    total = len(view)
+    sent = 0
+    next_progress = progress_step if progress_step else total + 1
+    print(f"傳送 {label} ({total} bytes)...")
+    while sent < total:
+        written = ser.write(view[sent:])
+        if written is None:
+            written = 0
+        if written == 0:
+            raise RuntimeError(f"{label} 傳輸停滯在 {sent}/{total} bytes")
+        sent += written
+        if progress_step and sent >= next_progress:
+            print(f"  -> {label} 進度 {sent}/{total}")
+            next_progress += progress_step
+    print(f"✓ {label} 傳輸完成 ({total} bytes)")
+    if own_view:
+        view.release()
+
+
+def send_frame(ser, cmd_byte, frame_idx, frame_bytes, label, progress_step):
+    ser.write(bytes([cmd_byte]))
+    header = bytes(
+        [
+            frame_idx & 0xFF,
+            (frame_idx >> 8) & 0xFF,
+        ]
+    )
+    ser.write(header)
+    write_all(ser, frame_bytes, label, progress_step=progress_step)
+    wait_for_ack(ser, f"{label} 完成")
+
+
+def send_case_command(ser, mb_col, mb_row):
+    payload = bytes(
+        [
+            mb_col & 0xFF,
+            (mb_col >> 8) & 0xFF,
+            mb_row & 0xFF,
+            (mb_row >> 8) & 0xFF,
+        ]
+    )
+    ser.write(bytes([CMD_RUN_CASE]))
+    ser.write(payload)
 
 
 def receive_fpga_result(ser):
@@ -249,38 +282,46 @@ def parse_args():
 
 def run_verification():
     args = parse_args()
+    timings = TimingTracker()
+    ser = None
     try:
-        video = GoldenVideo(args.hex_path)
-        trace_entries = load_golden_trace(args.trace_path)
-        cases = select_cases(args, trace_entries)
-    except Exception as exc:
-        print(f"[設定錯誤] {exc}")
-        return
+        try:
+            video = GoldenVideo(args.hex_path)
+            trace_entries = load_golden_trace(args.trace_path)
+            cases = select_cases(args, trace_entries)
+        except Exception as exc:
+            print(f"[設定錯誤] {exc}")
+            return
 
-    valid_cases = [c for c in cases if c["frame"] > 0]
-    if not valid_cases:
-        print("沒有 frame >= 1 的案例可測試。")
-        return
+        valid_cases = [c for c in cases if c["frame"] > 0]
+        if not valid_cases:
+            print("沒有 frame >= 1 的案例可測試。")
+            return
 
-    print("=== HEXBS FPGA 快速驗證模式 ===")
-    print(f"影像規格: {video.width}x{video.height}, Frame Size={video.frame_size} bytes")
-    print(f"本次準備測試 {len(valid_cases)} 筆案例")
+        print("=== HEXBS FPGA 快速驗證模式 ===")
+        print(f"影像規格: {video.width}x{video.height}, Frame Size={video.frame_size} bytes")
+        print(f"本次準備測試 {len(valid_cases)} 筆案例")
 
-    try:
-        ser = serial.Serial(args.port, args.baud, timeout=5, xonxoff=False)
-    except Exception as exc:
-        print(f"[連線失敗] {exc}")
-        return
+        try:
+            ser = serial.Serial(args.port, args.baud, timeout=5, xonxoff=False)
+        except Exception as exc:
+            print(f"[連線失敗] {exc}")
+            return
 
-    time.sleep(2)
-    print(f"已連線 {args.port} (baud={args.baud})，開始傳輸區域資料...")
+        ser.reset_input_buffer()
+        ser.reset_output_buffer()
+        time.sleep(2)
+        print(f"已連線 {args.port} (baud={args.baud})，Frame 將以整批載入。")
 
-    last_window_key = None
-    fail_count = 0
-    fail_details = []
-    stop_reason = None
+        progress_step = max(1024, video.frame_size // 10)
+        fail_count = 0
+        fail_details = []
+        stop_reason = None
+        loaded_ref_frame = None
+        loaded_cur_frame = None
+        cached_ref_frame = None
+        cached_cur_frame = None
 
-    try:
         for entry in valid_cases:
             frame_idx = entry["frame"]
             mb_row = entry["mb_row"]
@@ -288,28 +329,57 @@ def run_verification():
             exp_mv_x = entry["mv_x"]
             exp_mv_y = entry["mv_y"]
             exp_sad = entry["sad"]
+            ref_frame_idx = frame_idx - 1
+            cur_frame_idx = frame_idx
 
             print(f"\n[CASE] Frame={frame_idx} MB(Row={mb_row}, Col={mb_col})")
 
-            ref_frame = video.get_frame_pixels(frame_idx - 1)
-            cur_frame = video.get_frame_pixels(frame_idx)
+            if ref_frame_idx != loaded_ref_frame:
+                cached_ref_frame = video.get_frame_pixels(ref_frame_idx)
+                with timings.measure(
+                    "ref_frame_transfer",
+                    f"傳輸參考 Frame {ref_frame_idx}",
+                    summary_label="參考 Frame 傳輸",
+                ):
+                    send_frame(
+                        ser,
+                        CMD_LOAD_REF_FRAME,
+                        ref_frame_idx,
+                        cached_ref_frame,
+                        f"參考 Frame {ref_frame_idx}",
+                        progress_step,
+                    )
+                loaded_ref_frame = ref_frame_idx
 
-            base_x, base_y = compute_window_base(mb_row, mb_col, video.width, video.height)
-            window_key = (frame_idx, base_x, base_y)
-
-            if window_key != last_window_key:
-                window_bytes = extract_window(ref_frame, video.width, base_x, base_y)
-                send_window(ser, base_x, base_y, window_bytes)
-                last_window_key = window_key
+            if cur_frame_idx != loaded_cur_frame:
+                cached_cur_frame = video.get_frame_pixels(cur_frame_idx)
+                with timings.measure(
+                    "cur_frame_transfer",
+                    f"傳輸當前 Frame {cur_frame_idx}",
+                    summary_label="當前 Frame 傳輸",
+                ):
+                    send_frame(
+                        ser,
+                        CMD_LOAD_CUR_FRAME,
+                        cur_frame_idx,
+                        cached_cur_frame,
+                        f"當前 Frame {cur_frame_idx}",
+                        progress_step,
+                    )
+                loaded_cur_frame = cur_frame_idx
+            cur_frame = cached_cur_frame
 
             cur_block = extract_block(cur_frame, video.width, mb_row, mb_col)
-            send_current_block(ser, mb_col, mb_row, cur_block)
+            with timings.measure("case_command", "送出案例", summary_label="案例指令傳送"):
+                send_case_command(ser, mb_col, mb_row)
 
             ref_row = max(0, min(mb_row + exp_mv_y, video.height - MB_SIZE))
             ref_col = max(0, min(mb_col + exp_mv_x, video.width - MB_SIZE))
+            confirm_sad = None
             try:
-                ref_block = video.get_macroblock(frame_idx - 1, ref_row, ref_col)
-                confirm_sad = compute_sad(cur_block, ref_block)
+                with timings.measure("sad_recompute", "重新計算 SAD", summary_label="CPU SAD 驗證"):
+                    ref_block = video.get_macroblock(ref_frame_idx, ref_row, ref_col)
+                    confirm_sad = compute_sad(cur_block, ref_block)
             except Exception:
                 confirm_sad = None
 
@@ -320,7 +390,8 @@ def run_verification():
 
             print("  等待 FPGA 回傳結果...")
             try:
-                fpga_mv_x, fpga_mv_y, fpga_sad = receive_fpga_result(ser)
+                with timings.measure("fpga_latency", "等待 FPGA 結果", summary_label="FPGA 結果等待"):
+                    fpga_mv_x, fpga_mv_y, fpga_sad = receive_fpga_result(ser)
             except RuntimeError as exc:
                 print(f"  × {exc}")
                 return
@@ -338,7 +409,7 @@ def run_verification():
                 if not sad_match:
                     diff = fpga_sad - exp_sad
                     print(f"    - SAD mismatch: HW={fpga_sad}, EXP={exp_sad} (差值 {diff})")
-                print("    請確認視窗資料或搜尋範圍是否正確。")
+                print("    請確認 frame 載入與搜尋範圍是否正確。")
                 fail_count += 1
                 fail_details.append(
                     {
@@ -361,23 +432,24 @@ def run_verification():
                     stop_reason = "fail-limit"
                     break
 
+        if fail_details:
+            print("\n=== 測試錯誤摘要 ===")
+            for idx, info in enumerate(fail_details, start=1):
+                exp_mv_x, exp_mv_y = info["exp_mv"]
+                hw_mv_x, hw_mv_y = info["hw_mv"]
+                print(
+                    f"[{idx}] Frame={info['frame']} MB(Row={info['mb_row']}, Col={info['mb_col']})"
+                    f" | EXP MV=({exp_mv_x},{exp_mv_y}) SAD={info['exp_sad']}"
+                    f" | HW MV=({hw_mv_x},{hw_mv_y}) SAD={info['hw_sad']} (差值 {info['sad_diff']})"
+                )
+            if stop_reason == "fail-fast":
+                print("※ 已於第一筆錯誤後停止 (fail-fast)")
+            elif stop_reason == "fail-limit":
+                print(f"※ 因達到 --fail-limit 限制 ({fail_count} 筆) 而結束測試")
     finally:
-        ser.close()
-
-    if fail_details:
-        print("\n=== 測試錯誤摘要 ===")
-        for idx, info in enumerate(fail_details, start=1):
-            exp_mv_x, exp_mv_y = info["exp_mv"]
-            hw_mv_x, hw_mv_y = info["hw_mv"]
-            print(
-                f"[{idx}] Frame={info['frame']} MB(Row={info['mb_row']}, Col={info['mb_col']})"
-                f" | EXP MV=({exp_mv_x},{exp_mv_y}) SAD={info['exp_sad']}"
-                f" | HW MV=({hw_mv_x},{hw_mv_y}) SAD={info['hw_sad']} (差值 {info['sad_diff']})"
-            )
-        if stop_reason == "fail-fast":
-            print("※ 已於第一筆錯誤後停止 (fail-fast)")
-        elif stop_reason == "fail-limit":
-            print(f"※ 因達到 --fail-limit 限制 ({fail_count} 筆) 而結束測試")
+        if ser is not None:
+            ser.close()
+        timings.summary()
 
 
 if __name__ == "__main__":
