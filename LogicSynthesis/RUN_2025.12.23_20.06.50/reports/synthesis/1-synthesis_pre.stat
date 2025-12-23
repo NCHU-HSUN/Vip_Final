@@ -1,0 +1,31 @@
+
+47. Printing statistics.
+
+=== hexbs_top ===
+
+   Number of wires:               8448
+   Number of wire bits:          10603
+   Number of public wires:         284
+   Number of public wire bits:    2362
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              10464
+     $_ANDNOT_                    1194
+     $_AND_                       2383
+     $_DFFE_PN0N_                    1
+     $_DFFE_PN0P_                   84
+     $_DFFE_PN1P_                   16
+     $_DFFE_PP_                   2078
+     $_DFF_PN0_                      7
+     $_DFF_PN1_                      1
+     $_MUX_                         81
+     $_NAND_                       218
+     $_NOR_                        535
+     $_NOT_                        236
+     $_ORNOT_                      177
+     $_OR_                        2619
+     $_SDFFCE_PN0P_                  4
+     $_XNOR_                       261
+     $_XOR_                        569
+

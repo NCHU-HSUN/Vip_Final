@@ -1,0 +1,884 @@
+
+Magic 8.3 revision 413 - Compiled on Wed Jul 12 10:04:40 UTC 2023.
+Starting magic under Tcl interpreter
+Using the terminal as the console.
+Using NULL graphics device.
+Processing system .magicrc file
+Sourcing design .magicrc for technology sky130A ...
+2 Magic internal units = 1 Lambda
+Input style sky130(): scaleFactor=2, multiplier=2
+The following types are not handled by extraction and will be treated as non-electrical types:
+    ubm 
+Scaled tech values by 2 / 1 to match internal grid scaling
+Loading sky130A Device Generator Menu ...
+Using technology "sky130A", version 1.0.493-0-g0fe599b
+Reading LEF data from file /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/techlef/sky130_fd_sc_hd__nom.tlef.
+This action cannot be undone.
+LEF read, Line 82 (Message): Unknown keyword "ANTENNAMODEL" in LEF file; ignoring.
+LEF read, Line 83 (Message): Unknown keyword "ANTENNADIFFSIDEAREARATIO" in LEF file; ignoring.
+LEF read, Line 116 (Message): Unknown keyword "MINENCLOSEDAREA" in LEF file; ignoring.
+LEF read, Line 118 (Message): Unknown keyword "ANTENNAMODEL" in LEF file; ignoring.
+LEF read, Line 119 (Message): Unknown keyword "ANTENNADIFFSIDEAREARATIO" in LEF file; ignoring.
+LEF read, Line 125 (Message): Unknown keyword "MAXIMUMDENSITY" in LEF file; ignoring.
+LEF read, Line 126 (Message): Unknown keyword "DENSITYCHECKWINDOW" in LEF file; ignoring.
+LEF read, Line 127 (Message): Unknown keyword "DENSITYCHECKSTEP" in LEF file; ignoring.
+LEF read, Line 160 (Message): Unknown keyword "MINENCLOSEDAREA" in LEF file; ignoring.
+LEF read, Line 168 (Message): Unknown keyword "ANTENNAMODEL" in LEF file; ignoring.
+LEF read, Line 169 (Message): Unknown keyword "ANTENNADIFFSIDEAREARATIO" in LEF file; ignoring.
+LEF read, Line 171 (Message): Unknown keyword "MAXIMUMDENSITY" in LEF file; ignoring.
+LEF read, Line 172 (Message): Unknown keyword "DENSITYCHECKWINDOW" in LEF file; ignoring.
+LEF read, Line 173 (Message): Unknown keyword "DENSITYCHECKSTEP" in LEF file; ignoring.
+LEF read, Line 210 (Message): Unknown keyword "ANTENNAMODEL" in LEF file; ignoring.
+LEF read, Line 211 (Message): Unknown keyword "ANTENNADIFFSIDEAREARATIO" in LEF file; ignoring.
+LEF read, Line 213 (Message): Unknown keyword "MAXIMUMDENSITY" in LEF file; ignoring.
+LEF read, Line 214 (Message): Unknown keyword "DENSITYCHECKWINDOW" in LEF file; ignoring.
+LEF read, Line 215 (Message): Unknown keyword "DENSITYCHECKSTEP" in LEF file; ignoring.
+LEF read, Line 252 (Message): Unknown keyword "ANTENNAMODEL" in LEF file; ignoring.
+LEF read, Line 253 (Message): Unknown keyword "ANTENNADIFFSIDEAREARATIO" in LEF file; ignoring.
+LEF read, Line 255 (Message): Unknown keyword "MAXIMUMDENSITY" in LEF file; ignoring.
+LEF read, Line 256 (Message): Unknown keyword "DENSITYCHECKWINDOW" in LEF file; ignoring.
+LEF read, Line 257 (Message): Unknown keyword "DENSITYCHECKSTEP" in LEF file; ignoring.
+LEF read, Line 294 (Message): Unknown keyword "ANTENNAMODEL" in LEF file; ignoring.
+LEF read, Line 295 (Message): Unknown keyword "ANTENNADIFFSIDEAREARATIO" in LEF file; ignoring.
+LEF read: Processed 801 lines.
+Reading DEF data from file /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/results/routing/hexbs_top.def.
+This action cannot be undone.
+  Processed 4 vias total.
+Cell sky130_fd_sc_hd__diode_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__decap_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__fill_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_ef_sc_hd__decap_12 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__decap_3 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__decap_8 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__decap_6 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__fill_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__tapvpwrvgnd_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__buf_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and4_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__buf_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__buf_8 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__clkbuf_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and4_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__clkbuf_8 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__clkbuf_16 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nand2_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nor2_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and2b_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and3b_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and3_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__buf_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__or2_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a22o_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__inv_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__or4_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nand2_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a21o_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nand2_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nor3_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__or3b_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o2bb2ai_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__or2_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nand3_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and2_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__buf_6 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o21a_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o21bai_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a221o_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__xor2_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a31o_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__xor2_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nor2_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and4_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nand3_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a211o_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a2111oi_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__xnor2_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__xnor2_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o41a_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a2111oi_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o21ai_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o211a_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__or2b_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a21oi_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o21bai_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a21bo_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a21oi_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a32o_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o21ba_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a31o_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__or3_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o22a_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o2111a_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o21ai_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__xor2_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__xnor2_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a32o_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nor2_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__mux2_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a21boi_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a2bb2o_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o21ai_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o31a_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o21a_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__or3_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a2111oi_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and4b_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a211o_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a221o_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__or4_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nor4_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__or3b_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a21bo_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nand4_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__clkbuf_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__clkinv_8 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o32a_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a22o_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and4bb_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a311o_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nand2b_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__mux2_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o311a_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o22ai_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o32a_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o221a_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o22ai_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__or2_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o31ai_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and2_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o2bb2a_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a31o_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a21oi_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a2bb2o_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a211oi_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a2111o_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__or4b_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o22ai_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__or3_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o2111ai_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a2bb2o_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nor4_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o31ai_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a31oi_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o211ai_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o221a_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nor4b_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__buf_12 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and4bb_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a2111o_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and4b_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and2_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__or4b_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nor2_8 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and4b_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a22o_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and3_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nor4b_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__or4_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nand4_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a32o_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a311o_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a311o_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a221o_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and3_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a2111o_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a221oi_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__or4bb_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nor3_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o41a_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and4bb_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o221ai_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a22oi_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a22oi_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__clkbuf_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a21o_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nand2_8 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__a211o_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o211a_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__o311a_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__and3b_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__or4b_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__nand3_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__dfxtp_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__dfstp_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__dfrtp_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__dfrtp_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__dfstp_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__dfrtp_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__dfxtp_2 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__dfxtp_4 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__dlygate4sd3_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__dlymetal6s2s_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+Cell sky130_fd_sc_hd__dlygate4sd1_1 read from path /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/mag
+  Processed 70120 subcell instances total.
+  Processed 202 pins total.
+  Processed 2 special nets total.
+  Processed 14136 nets total.
+DEF read: Processed 330065 lines.
+Moving label "_00012_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00013_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00041_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00075_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00135_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00139_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00155_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00159_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00162_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00164_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00167_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00172_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00174_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00181_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00182_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00186_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00193_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00194_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00196_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00197_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00219_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00221_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00229_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00251_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00255_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00272_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00277_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00280_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00281_" from metal1 to viali in cell hexbs_top.
+Moving label "_00283_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00299_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00303_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00310_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00315_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00324_" from metal1 to viali in cell hexbs_top.
+Moving label "_00326_" from metal2 to via1 in cell hexbs_top.
+Moving label "_00328_" from metal1 to viali in cell hexbs_top.
+Moving label "_00333_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00335_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00349_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00351_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00354_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00360_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00375_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00407_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00409_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00412_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00414_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00420_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00425_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00431_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00432_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00434_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00452_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00453_" from metal1 to viali in cell hexbs_top.
+Moving label "_00454_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00456_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00458_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00469_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00472_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00487_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00496_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00498_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00511_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00512_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00514_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00517_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00521_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00522_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00524_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00526_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00535_" from metal1 to viali in cell hexbs_top.
+Moving label "_00536_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00546_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00547_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00553_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00564_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00565_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00576_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00580_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00585_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00587_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00591_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00595_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00596_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00603_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00608_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00614_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00615_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00632_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00634_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00637_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00644_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00646_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00652_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00655_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00664_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00667_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00669_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00672_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00683_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00688_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00707_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00711_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00722_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00725_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00734_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00735_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00758_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00762_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00767_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00770_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00780_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00790_" from metal1 to viali in cell hexbs_top.
+Moving label "_00796_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00825_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00832_" from metal1 to viali in cell hexbs_top.
+Moving label "_00837_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00838_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00841_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00843_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00847_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00861_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00875_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00876_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00887_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00892_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00894_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00903_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00907_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00920_" from metal1 to viali in cell hexbs_top.
+Moving label "_00924_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00926_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00933_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00957_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00962_" from metal1 to viali in cell hexbs_top.
+Moving label "_00963_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00965_" from metal1 to viali in cell hexbs_top.
+Moving label "_00968_" from metal1 to via1 in cell hexbs_top.
+Moving label "_00992_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01019_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01036_" from metal1 to viali in cell hexbs_top.
+Moving label "_01040_" from metal1 to viali in cell hexbs_top.
+Moving label "_01060_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01074_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01076_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01079_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01084_" from metal1 to viali in cell hexbs_top.
+Moving label "_01087_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01094_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01103_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01111_" from metal1 to viali in cell hexbs_top.
+Moving label "_01112_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01114_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01115_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01118_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01120_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01128_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01140_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01168_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01169_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01170_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01175_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01176_" from metal1 to viali in cell hexbs_top.
+Moving label "_01180_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01183_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01188_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01192_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01198_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01201_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01204_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01217_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01219_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01228_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01232_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01235_" from metal1 to viali in cell hexbs_top.
+Moving label "_01250_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01251_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01254_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01264_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01269_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01277_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01285_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01286_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01289_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01296_" from metal1 to viali in cell hexbs_top.
+Moving label "_01312_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01320_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01322_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01342_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01350_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01352_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01353_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01373_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01376_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01384_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01388_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01392_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01398_" from metal1 to viali in cell hexbs_top.
+Moving label "_01406_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01417_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01430_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01432_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01438_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01444_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01445_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01450_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01451_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01453_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01455_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01464_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01471_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01475_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01476_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01495_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01496_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01507_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01516_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01523_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01534_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01536_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01541_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01559_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01563_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01568_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01576_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01595_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01599_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01600_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01603_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01611_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01612_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01628_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01632_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01639_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01651_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01659_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01670_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01685_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01691_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01698_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01707_" from metal1 to viali in cell hexbs_top.
+Moving label "_01708_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01710_" from metal1 to viali in cell hexbs_top.
+Moving label "_01711_" from metal1 to viali in cell hexbs_top.
+Moving label "_01723_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01730_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01738_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01748_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01751_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01761_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01779_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01780_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01787_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01792_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01795_" from metal1 to viali in cell hexbs_top.
+Moving label "_01801_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01802_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01818_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01829_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01835_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01836_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01850_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01881_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01884_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01886_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01888_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01895_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01940_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01958_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01963_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01973_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01977_" from metal1 to via1 in cell hexbs_top.
+Moving label "_01994_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02004_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02024_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02033_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02038_" from metal1 to viali in cell hexbs_top.
+Moving label "_02039_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02053_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02064_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02068_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02076_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02077_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02082_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02084_" from metal1 to viali in cell hexbs_top.
+Moving label "_02086_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02090_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02101_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02105_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02106_" from metal1 to viali in cell hexbs_top.
+Moving label "_02109_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02126_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02134_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02148_" from metal1 to via1 in cell hexbs_top.
+Moving label "_02374_" from metal2 to via2 in cell hexbs_top.
+Moving label "_02550_" from metal1 to viali in cell hexbs_top.
+Moving label "_02561_" from metal1 to viali in cell hexbs_top.
+Moving label "_02658_" from metal2 to via2 in cell hexbs_top.
+Moving label "_02805_" from metal2 to via2 in cell hexbs_top.
+Moving label "_02901_" from metal1 to viali in cell hexbs_top.
+Moving label "_03094_" from metal1 to via1 in cell hexbs_top.
+Moving label "_03202_" from metal1 to viali in cell hexbs_top.
+Moving label "_03244_" from metal1 to via1 in cell hexbs_top.
+Moving label "_03254_" from metal2 to via1 in cell hexbs_top.
+Moving label "_03336_" from metal2 to via1 in cell hexbs_top.
+Moving label "_03468_" from metal3 to via2 in cell hexbs_top.
+Moving label "_03519_" from metal3 to via2 in cell hexbs_top.
+Moving label "_03636_" from metal1 to via1 in cell hexbs_top.
+Moving label "_03783_" from metal1 to viali in cell hexbs_top.
+Moving label "_03788_" from metal2 to via2 in cell hexbs_top.
+Moving label "_03790_" from metal1 to via1 in cell hexbs_top.
+Moving label "_03802_" from metal1 to via1 in cell hexbs_top.
+Moving label "_03806_" from metal1 to via1 in cell hexbs_top.
+Moving label "_03848_" from metal1 to viali in cell hexbs_top.
+Moving label "_03950_" from metal1 to viali in cell hexbs_top.
+Moving label "_03962_" from metal1 to viali in cell hexbs_top.
+Moving label "_04135_" from metal1 to via1 in cell hexbs_top.
+Moving label "_04527_" from metal1 to via1 in cell hexbs_top.
+Moving label "_04540_" from metal2 to via2 in cell hexbs_top.
+Moving label "_04557_" from metal1 to viali in cell hexbs_top.
+Moving label "_04560_" from metal2 to via1 in cell hexbs_top.
+Moving label "_04572_" from metal1 to viali in cell hexbs_top.
+Moving label "_04583_" from metal1 to viali in cell hexbs_top.
+Moving label "_04609_" from metal1 to viali in cell hexbs_top.
+Moving label "_04624_" from metal1 to viali in cell hexbs_top.
+Moving label "_04666_" from metal1 to via1 in cell hexbs_top.
+Moving label "_04684_" from metal1 to via1 in cell hexbs_top.
+Moving label "_04690_" from metal2 to via1 in cell hexbs_top.
+Moving label "_04744_" from metal1 to via1 in cell hexbs_top.
+Moving label "_04750_" from metal1 to viali in cell hexbs_top.
+Moving label "_04858_" from metal2 to via1 in cell hexbs_top.
+Moving label "_04883_" from metal1 to via1 in cell hexbs_top.
+Moving label "_05274_" from metal1 to viali in cell hexbs_top.
+Moving label "_05283_" from metal1 to via1 in cell hexbs_top.
+Moving label "_05336_" from metal1 to via1 in cell hexbs_top.
+Moving label "_05455_" from metal1 to via1 in cell hexbs_top.
+Moving label "_05487_" from metal1 to via1 in cell hexbs_top.
+Moving label "_05496_" from metal2 to via2 in cell hexbs_top.
+Moving label "_05650_" from metal1 to viali in cell hexbs_top.
+Moving label "_05751_" from metal2 to via1 in cell hexbs_top.
+Moving label "_05896_" from metal3 to via3 in cell hexbs_top.
+Moving label "_05922_" from metal1 to via1 in cell hexbs_top.
+Moving label "_05943_" from metal2 to via2 in cell hexbs_top.
+Moving label "_05977_" from metal1 to via1 in cell hexbs_top.
+Moving label "_05978_" from metal2 to via1 in cell hexbs_top.
+Moving label "_06007_" from metal3 to via3 in cell hexbs_top.
+Moving label "_06067_" from metal1 to viali in cell hexbs_top.
+Moving label "_06075_" from metal1 to via1 in cell hexbs_top.
+Moving label "_06091_" from metal1 to via1 in cell hexbs_top.
+Moving label "_06154_" from metal2 to via2 in cell hexbs_top.
+Moving label "_06157_" from metal1 to via1 in cell hexbs_top.
+Moving label "_06172_" from metal3 to via2 in cell hexbs_top.
+Moving label "_06224_" from metal1 to viali in cell hexbs_top.
+Moving label "_06228_" from metal2 to via1 in cell hexbs_top.
+Moving label "_06231_" from metal2 to via2 in cell hexbs_top.
+Moving label "_06235_" from metal2 to via2 in cell hexbs_top.
+Moving label "_06236_" from metal1 to viali in cell hexbs_top.
+Moving label "_06247_" from metal1 to viali in cell hexbs_top.
+Moving label "_06274_" from metal1 to viali in cell hexbs_top.
+Moving label "_06360_" from metal2 to via2 in cell hexbs_top.
+Moving label "_06377_" from metal2 to via2 in cell hexbs_top.
+Moving label "_06378_" from metal1 to via1 in cell hexbs_top.
+Moving label "_06383_" from metal1 to via1 in cell hexbs_top.
+Moving label "_06394_" from metal1 to via1 in cell hexbs_top.
+Moving label "_06402_" from metal1 to via1 in cell hexbs_top.
+Moving label "_06425_" from metal2 to via2 in cell hexbs_top.
+Moving label "_06447_" from metal1 to via1 in cell hexbs_top.
+Moving label "_06454_" from metal2 to via2 in cell hexbs_top.
+Moving label "_06479_" from metal2 to via2 in cell hexbs_top.
+Moving label "_06487_" from metal2 to via2 in cell hexbs_top.
+Moving label "_06490_" from metal2 to via1 in cell hexbs_top.
+Moving label "_06493_" from metal3 to via3 in cell hexbs_top.
+Moving label "_06584_" from metal3 to via3 in cell hexbs_top.
+Moving label "_06649_" from metal2 to via2 in cell hexbs_top.
+Moving label "_06708_" from metal1 to via1 in cell hexbs_top.
+Moving label "_06720_" from metal2 to via2 in cell hexbs_top.
+Moving label "_06745_" from metal2 to via2 in cell hexbs_top.
+Moving label "_06751_" from metal3 to via3 in cell hexbs_top.
+Moving label "_06775_" from metal1 to via1 in cell hexbs_top.
+Moving label "_06870_" from metal2 to via2 in cell hexbs_top.
+Moving label "_06877_" from metal3 to via3 in cell hexbs_top.
+Moving label "_06967_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07006_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07055_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07083_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07100_" from metal1 to via1 in cell hexbs_top.
+Moving label "_07120_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07128_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07147_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07159_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07202_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07223_" from metal3 to via3 in cell hexbs_top.
+Moving label "_07251_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07264_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07266_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07285_" from metal3 to via3 in cell hexbs_top.
+Moving label "_07350_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07373_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07406_" from metal3 to via3 in cell hexbs_top.
+Moving label "_07442_" from metal3 to via3 in cell hexbs_top.
+Moving label "_07488_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07497_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07550_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07557_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07607_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07635_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07673_" from metal3 to via3 in cell hexbs_top.
+Moving label "_07679_" from metal1 to via1 in cell hexbs_top.
+Moving label "_07755_" from metal3 to via3 in cell hexbs_top.
+Moving label "_07785_" from metal2 to via2 in cell hexbs_top.
+Moving label "_07815_" from metal2 to via2 in cell hexbs_top.
+Moving label "_08004_" from metal3 to via3 in cell hexbs_top.
+Moving label "_08034_" from metal2 to via2 in cell hexbs_top.
+Moving label "_08064_" from metal2 to via2 in cell hexbs_top.
+Moving label "_08111_" from metal2 to via1 in cell hexbs_top.
+Moving label "_08122_" from metal2 to via1 in cell hexbs_top.
+Moving label "_08131_" from metal1 to via1 in cell hexbs_top.
+Moving label "_08206_" from metal1 to via1 in cell hexbs_top.
+Moving label "_08209_" from metal2 to via2 in cell hexbs_top.
+Moving label "_08254_" from metal3 to via3 in cell hexbs_top.
+Moving label "_08284_" from metal1 to via1 in cell hexbs_top.
+Moving label "_08289_" from metal2 to via2 in cell hexbs_top.
+Moving label "_08338_" from metal2 to via2 in cell hexbs_top.
+Moving label "_08340_" from metal1 to viali in cell hexbs_top.
+Moving label "_08347_" from metal2 to via1 in cell hexbs_top.
+Moving label "_08348_" from metal2 to via1 in cell hexbs_top.
+Moving label "_08386_" from metal2 to via2 in cell hexbs_top.
+Moving label "_08430_" from metal1 to via1 in cell hexbs_top.
+Moving label "_08495_" from metal1 to via1 in cell hexbs_top.
+Moving label "_08557_" from metal1 to via1 in cell hexbs_top.
+Moving label "_08711_" from metal1 to viali in cell hexbs_top.
+Moving label "_08732_" from metal2 to via2 in cell hexbs_top.
+Moving label "_08743_" from metal1 to via1 in cell hexbs_top.
+Moving label "_08840_" from metal1 to viali in cell hexbs_top.
+Moving label "_09270_" from metal2 to via1 in cell hexbs_top.
+Moving label "clknet_2_1_0_clk" from metal3 to via3 in cell hexbs_top.
+Moving label "clknet_5_17__leaf_clk" from metal2 to via2 in cell hexbs_top.
+Moving label "clknet_5_24__leaf_clk" from metal2 to via2 in cell hexbs_top.
+Moving label "clknet_leaf_287_clk" from metal1 to viali in cell hexbs_top.
+Moving label "clknet_leaf_338_clk" from metal2 to via1 in cell hexbs_top.
+Moving label "clknet_leaf_61_clk" from metal1 to viali in cell hexbs_top.
+Moving label "cur_mb_mem\[0\]\[0\]" from metal2 to via1 in cell hexbs_top.
+Moving label "cur_mb_mem\[100\]\[7\]" from metal2 to via2 in cell hexbs_top.
+Moving label "cur_mb_mem\[113\]\[7\]" from metal2 to via2 in cell hexbs_top.
+Moving label "cur_mb_mem\[115\]\[3\]" from metal2 to via1 in cell hexbs_top.
+Moving label "cur_mb_mem\[117\]\[6\]" from metal2 to via2 in cell hexbs_top.
+Moving label "cur_mb_mem\[11\]\[4\]" from metal1 to via1 in cell hexbs_top.
+Moving label "cur_mb_mem\[120\]\[7\]" from metal2 to via2 in cell hexbs_top.
+Moving label "cur_mb_mem\[122\]\[6\]" from metal2 to via2 in cell hexbs_top.
+Moving label "cur_mb_mem\[14\]\[6\]" from metal1 to viali in cell hexbs_top.
+Moving label "cur_mb_mem\[184\]\[0\]" from metal2 to via2 in cell hexbs_top.
+Moving label "cur_mb_mem\[207\]\[5\]" from metal2 to via2 in cell hexbs_top.
+Moving label "cur_mb_mem\[207\]\[7\]" from metal3 to via3 in cell hexbs_top.
+Moving label "cur_mb_mem\[20\]\[6\]" from metal1 to via1 in cell hexbs_top.
+Moving label "cur_mb_mem\[227\]\[5\]" from metal2 to via1 in cell hexbs_top.
+Moving label "cur_mb_mem\[22\]\[0\]" from metal1 to via1 in cell hexbs_top.
+Moving label "cur_mb_mem\[22\]\[3\]" from metal1 to via1 in cell hexbs_top.
+Moving label "cur_mb_mem\[242\]\[6\]" from metal2 to via1 in cell hexbs_top.
+Moving label "cur_mb_mem\[24\]\[6\]" from metal3 to via3 in cell hexbs_top.
+Moving label "cur_mb_mem\[27\]\[6\]" from metal1 to via1 in cell hexbs_top.
+Moving label "cur_mb_mem\[29\]\[6\]" from metal1 to via1 in cell hexbs_top.
+Moving label "cur_mb_mem\[29\]\[7\]" from metal2 to via2 in cell hexbs_top.
+Moving label "cur_mb_mem\[30\]\[1\]" from metal1 to via1 in cell hexbs_top.
+Moving label "cur_mb_mem\[68\]\[7\]" from metal1 to via1 in cell hexbs_top.
+Moving label "cur_mb_mem\[85\]\[4\]" from metal1 to via1 in cell hexbs_top.
+Moving label "cur_mb_mem\[99\]\[4\]" from metal2 to via1 in cell hexbs_top.
+Moving label "cur_mb_mem\[99\]\[5\]" from metal2 to via2 in cell hexbs_top.
+Moving label "mem_addr[0]" from metal2 to via2 in cell hexbs_top.
+Moving label "mem_addr[27]" from metal2 to via2 in cell hexbs_top.
+Moving label "mem_addr[28]" from metal2 to via2 in cell hexbs_top.
+Moving label "min_sad_reg\[1\]" from metal1 to via1 in cell hexbs_top.
+Moving label "mv_y[4]" from metal2 to via2 in cell hexbs_top.
+Moving label "net124" from metal2 to via2 in cell hexbs_top.
+Moving label "net125" from metal2 to via2 in cell hexbs_top.
+Moving label "net165" from metal2 to via2 in cell hexbs_top.
+Moving label "net167" from metal2 to via2 in cell hexbs_top.
+Moving label "net180" from metal2 to via2 in cell hexbs_top.
+Moving label "net1937" from metal2 to via2 in cell hexbs_top.
+Moving label "net201" from metal3 to via3 in cell hexbs_top.
+Moving label "net240" from metal2 to via1 in cell hexbs_top.
+Moving label "net242" from metal2 to via2 in cell hexbs_top.
+Moving label "net287" from metal1 to viali in cell hexbs_top.
+Moving label "net39" from metal2 to via2 in cell hexbs_top.
+Moving label "net512" from metal2 to via2 in cell hexbs_top.
+Moving label "net561" from metal2 to via1 in cell hexbs_top.
+Moving label "net6" from metal2 to via2 in cell hexbs_top.
+Moving label "net63" from metal2 to via2 in cell hexbs_top.
+Moving label "net78" from metal2 to via2 in cell hexbs_top.
+Moving label "net822" from metal2 to via1 in cell hexbs_top.
+Moving label "net83" from metal3 to via3 in cell hexbs_top.
+Moving label "net911" from metal1 to viali in cell hexbs_top.
+Moving label "net986" from metal1 to viali in cell hexbs_top.
+Root cell box:
+           width x height  (   llx,  lly  ), (   urx,  ury  )  area (units^2)
+
+microns:  787.875 x 798.595  ( 0.000,  0.000), ( 787.875,  798.595)  629193.000
+lambda:   78787.50 x 79859.50  (  0.00,  0.00 ), ( 78787.50,  79859.50)  6291930112.00
+internal: 157575 x 159719  (     0,  0    ), ( 157575,  159719)  25167721425
+   Generating output for cell sky130_fd_sc_hd__diode_2
+   Generating output for cell sky130_fd_sc_hd__decap_8
+   Generating output for cell sky130_fd_sc_hd__fill_1
+   Generating output for cell sky130_fd_sc_hd__fill_2
+   Generating output for cell sky130_fd_sc_hd__decap_3
+   Generating output for cell sky130_fd_sc_hd__clkbuf_8
+   Generating output for cell sky130_fd_sc_hd__buf_8
+   Generating output for cell sky130_fd_sc_hd__tapvpwrvgnd_1
+   Generating output for cell sky130_fd_sc_hd__decap_4
+   Generating output for cell sky130_ef_sc_hd__decap_12
+   Generating output for cell sky130_fd_sc_hd__clkbuf_4
+   Generating output for cell sky130_fd_sc_hd__decap_6
+   Generating output for cell sky130_fd_sc_hd__buf_6
+   Generating output for cell sky130_fd_sc_hd__buf_12
+   Generating output for cell sky130_fd_sc_hd__clkbuf_16
+   Generating output for cell sky130_fd_sc_hd__buf_4
+   Generating output for cell sky130_fd_sc_hd__clkbuf_2
+   Generating output for cell sky130_fd_sc_hd__buf_2
+   Generating output for cell sky130_fd_sc_hd__clkbuf_1
+   Generating output for cell sky130_fd_sc_hd__mux2_1
+   Generating output for cell sky130_fd_sc_hd__dfxtp_1
+   Generating output for cell sky130_fd_sc_hd__dfxtp_2
+   Generating output for cell sky130_fd_sc_hd__dfrtp_4
+   Generating output for cell sky130_fd_sc_hd__inv_2
+   Generating output for cell sky130_fd_sc_hd__dlygate4sd3_1
+   Generating output for cell sky130_fd_sc_hd__dfrtp_1
+   Generating output for cell sky130_fd_sc_hd__dfxtp_4
+   Generating output for cell sky130_fd_sc_hd__and3_1
+   Generating output for cell sky130_fd_sc_hd__nand2_8
+   Generating output for cell sky130_fd_sc_hd__or4_1
+   Generating output for cell sky130_fd_sc_hd__or4_4
+   Generating output for cell sky130_fd_sc_hd__a2111o_1
+   Generating output for cell sky130_fd_sc_hd__and3_2
+   Generating output for cell sky130_fd_sc_hd__and3_4
+   Generating output for cell sky130_fd_sc_hd__a32o_2
+   Generating output for cell sky130_fd_sc_hd__a31o_4
+   Generating output for cell sky130_fd_sc_hd__a32o_1
+   Generating output for cell sky130_fd_sc_hd__and2_4
+   Generating output for cell sky130_fd_sc_hd__a31o_2
+   Generating output for cell sky130_fd_sc_hd__and2_1
+   Generating output for cell sky130_fd_sc_hd__a31o_1
+   Generating output for cell sky130_fd_sc_hd__a2111o_4
+   Generating output for cell sky130_fd_sc_hd__a2111o_2
+   Generating output for cell sky130_fd_sc_hd__a32o_4
+   Generating output for cell sky130_fd_sc_hd__or3_4
+   Generating output for cell sky130_fd_sc_hd__nand3_4
+   Generating output for cell sky130_fd_sc_hd__dfrtp_2
+   Generating output for cell sky130_fd_sc_hd__a221o_1
+   Generating output for cell sky130_fd_sc_hd__and2_2
+   Generating output for cell sky130_fd_sc_hd__a211o_1
+   Generating output for cell sky130_fd_sc_hd__nand2_4
+   Generating output for cell sky130_fd_sc_hd__or2_1
+   Generating output for cell sky130_fd_sc_hd__or4_2
+   Generating output for cell sky130_fd_sc_hd__clkinv_8
+   Generating output for cell sky130_fd_sc_hd__a22o_1
+   Generating output for cell sky130_fd_sc_hd__a311o_1
+   Generating output for cell sky130_fd_sc_hd__a311o_4
+   Generating output for cell sky130_fd_sc_hd__or2_2
+   Generating output for cell sky130_fd_sc_hd__buf_1
+   Generating output for cell sky130_fd_sc_hd__a221o_2
+   Generating output for cell sky130_fd_sc_hd__xnor2_2
+   Generating output for cell sky130_fd_sc_hd__nand2_1
+   Generating output for cell sky130_fd_sc_hd__o21ai_1
+   Generating output for cell sky130_fd_sc_hd__nand3_1
+   Generating output for cell sky130_fd_sc_hd__xnor2_1
+   Generating output for cell sky130_fd_sc_hd__o41a_1
+   Generating output for cell sky130_fd_sc_hd__a21o_1
+   Generating output for cell sky130_fd_sc_hd__a21oi_1
+   Generating output for cell sky130_fd_sc_hd__o22a_1
+   Generating output for cell sky130_fd_sc_hd__or3_1
+   Generating output for cell sky130_fd_sc_hd__a21bo_1
+   Generating output for cell sky130_fd_sc_hd__xor2_1
+   Generating output for cell sky130_fd_sc_hd__nor2_1
+   Generating output for cell sky130_fd_sc_hd__a2111oi_1
+   Generating output for cell sky130_fd_sc_hd__or3b_1
+   Generating output for cell sky130_fd_sc_hd__o211a_1
+   Generating output for cell sky130_fd_sc_hd__o21a_1
+   Generating output for cell sky130_fd_sc_hd__o21bai_1
+   Generating output for cell sky130_fd_sc_hd__o2111a_1
+   Generating output for cell sky130_fd_sc_hd__a311o_2
+   Generating output for cell sky130_fd_sc_hd__a21boi_1
+   Generating output for cell sky130_fd_sc_hd__and2b_1
+   Generating output for cell sky130_fd_sc_hd__a22o_2
+   Generating output for cell sky130_fd_sc_hd__and4_4
+   Generating output for cell sky130_fd_sc_hd__or2b_1
+   Generating output for cell sky130_fd_sc_hd__a31oi_1
+   Generating output for cell sky130_fd_sc_hd__nand2_2
+   Generating output for cell sky130_fd_sc_hd__a2111oi_4
+   Generating output for cell sky130_fd_sc_hd__o21ai_4
+   Generating output for cell sky130_fd_sc_hd__and4_1
+   Generating output for cell sky130_fd_sc_hd__xor2_2
+   Generating output for cell sky130_fd_sc_hd__nand3_2
+   Generating output for cell sky130_fd_sc_hd__o31ai_4
+   Generating output for cell sky130_fd_sc_hd__a21oi_2
+   Generating output for cell sky130_fd_sc_hd__a2bb2o_4
+   Generating output for cell sky130_fd_sc_hd__or3b_4
+   Generating output for cell sky130_fd_sc_hd__nor2_2
+   Generating output for cell sky130_fd_sc_hd__o31a_1
+   Generating output for cell sky130_fd_sc_hd__o22ai_4
+   Generating output for cell sky130_fd_sc_hd__a22o_4
+   Generating output for cell sky130_fd_sc_hd__nor3_1
+   Generating output for cell sky130_fd_sc_hd__nor4_4
+   Generating output for cell sky130_fd_sc_hd__a2bb2o_2
+   Generating output for cell sky130_fd_sc_hd__o2111ai_4
+   Generating output for cell sky130_fd_sc_hd__and3b_1
+   Generating output for cell sky130_fd_sc_hd__a21oi_4
+   Generating output for cell sky130_fd_sc_hd__or4bb_2
+   Generating output for cell sky130_fd_sc_hd__a221oi_1
+   Generating output for cell sky130_fd_sc_hd__and4b_4
+   Generating output for cell sky130_fd_sc_hd__o21ba_1
+   Generating output for cell sky130_fd_sc_hd__o2bb2a_1
+   Generating output for cell sky130_fd_sc_hd__and4bb_2
+   Generating output for cell sky130_fd_sc_hd__and4_2
+   Generating output for cell sky130_fd_sc_hd__and4bb_4
+   Generating output for cell sky130_fd_sc_hd__o22ai_1
+   Generating output for cell sky130_fd_sc_hd__or4b_4
+   Generating output for cell sky130_fd_sc_hd__nor4b_1
+   Generating output for cell sky130_fd_sc_hd__and4b_2
+   Generating output for cell sky130_fd_sc_hd__a211oi_1
+   Generating output for cell sky130_fd_sc_hd__and4b_1
+   Generating output for cell sky130_fd_sc_hd__or3_2
+   Generating output for cell sky130_fd_sc_hd__dlymetal6s2s_1
+   Generating output for cell sky130_fd_sc_hd__nor2_8
+   Generating output for cell sky130_fd_sc_hd__nor4_1
+   Generating output for cell sky130_fd_sc_hd__o221a_2
+   Generating output for cell sky130_fd_sc_hd__or4b_1
+   Generating output for cell sky130_fd_sc_hd__nand2b_2
+   Generating output for cell sky130_fd_sc_hd__nor4b_2
+   Generating output for cell sky130_fd_sc_hd__xnor2_4
+   Generating output for cell sky130_fd_sc_hd__nor2_4
+   Generating output for cell sky130_fd_sc_hd__o22ai_2
+   Generating output for cell sky130_fd_sc_hd__nand4_4
+   Generating output for cell sky130_fd_sc_hd__or2_4
+   Generating output for cell sky130_fd_sc_hd__o32a_1
+   Generating output for cell sky130_fd_sc_hd__a2bb2o_1
+   Generating output for cell sky130_fd_sc_hd__o31ai_2
+   Generating output for cell sky130_fd_sc_hd__mux2_4
+   Generating output for cell sky130_fd_sc_hd__o311a_4
+   Generating output for cell sky130_fd_sc_hd__dlygate4sd1_1
+   Generating output for cell sky130_fd_sc_hd__a21bo_2
+   Generating output for cell sky130_fd_sc_hd__xor2_4
+   Generating output for cell sky130_fd_sc_hd__a211o_4
+   Generating output for cell sky130_fd_sc_hd__nand4_1
+   Generating output for cell sky130_fd_sc_hd__o21a_4
+   Generating output for cell sky130_fd_sc_hd__o21ai_2
+   Generating output for cell sky130_fd_sc_hd__a2111oi_2
+   Generating output for cell sky130_fd_sc_hd__o32a_2
+   Generating output for cell sky130_fd_sc_hd__a221o_4
+   Generating output for cell sky130_fd_sc_hd__o21bai_2
+   Generating output for cell sky130_fd_sc_hd__o211ai_1
+   Generating output for cell sky130_fd_sc_hd__o221a_1
+   Generating output for cell sky130_fd_sc_hd__a211o_2
+   Generating output for cell sky130_fd_sc_hd__dfstp_1
+   Generating output for cell sky130_fd_sc_hd__and3b_2
+   Generating output for cell sky130_fd_sc_hd__o2bb2ai_1
+   Generating output for cell sky130_fd_sc_hd__a21o_4
+   Generating output for cell sky130_fd_sc_hd__dfstp_4
+   Generating output for cell sky130_fd_sc_hd__a22oi_4
+   Generating output for cell sky130_fd_sc_hd__o211a_2
+   Generating output for cell sky130_fd_sc_hd__or4b_2
+   Generating output for cell sky130_fd_sc_hd__o311a_1
+   Generating output for cell sky130_fd_sc_hd__a22oi_1
+   Generating output for cell sky130_fd_sc_hd__o41a_2
+   Generating output for cell sky130_fd_sc_hd__and4bb_1
+   Generating output for cell sky130_fd_sc_hd__nor3_2
+   Generating output for cell sky130_fd_sc_hd__o221ai_1
+   Generating output for cell hexbs_top
+[INFO]: GDS Write Complete

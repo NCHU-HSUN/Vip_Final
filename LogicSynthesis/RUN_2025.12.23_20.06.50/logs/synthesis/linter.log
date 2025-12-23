@@ -1,0 +1,70 @@
+%Warning-WIDTHTRUNC: /openlane/designs/hexbs/src/me_hexbs_topB.v:97:46: Bit extraction of array[255:0] requires 8 bit index, not 9 bits.
+                                                                      : ... In instance hexbs_top
+   97 |     assign current_diff = abs_diff(cur_mb_mem[pixel_cnt], mem_rdata);
+      |                                              ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.009
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /openlane/designs/hexbs/src/me_hexbs_topB.v:98:47: Operator ADD expects 16 bits on the RHS, but RHS's VARREF 'current_diff' generates 8 bits.
+                                                                       : ... In instance hexbs_top
+   98 |     assign sad_accum_next = current_accum_sad + current_diff;
+      |                                               ^
+%Warning-WIDTHTRUNC: /openlane/designs/hexbs/src/me_hexbs_topB.v:131:31: Bit extraction of array[255:0] requires 8 bit index, not 9 bits.
+                                                                       : ... In instance hexbs_top
+  131 |                     cur_mb_mem[pixel_cnt] <= mem_rdata;
+      |                               ^
+%Warning-WIDTHEXPAND: /openlane/designs/hexbs/src/me_hexbs_topB.v:149:40: Operator ADD expects 7 bits on the RHS, but RHS's ARRAYSEL generates 3 bits.
+                                                                        : ... In instance hexbs_top
+  149 |                     cand_x <= center_x + l_hex_off_x[0];
+      |                                        ^
+%Warning-WIDTHEXPAND: /openlane/designs/hexbs/src/me_hexbs_topB.v:150:40: Operator ADD expects 7 bits on the RHS, but RHS's ARRAYSEL generates 3 bits.
+                                                                        : ... In instance hexbs_top
+  150 |                     cand_y <= center_y + l_hex_off_y[0];
+      |                                        ^
+%Warning-WIDTHEXPAND: /openlane/designs/hexbs/src/me_hexbs_topB.v:186:48: Operator ADD expects 7 bits on the RHS, but RHS's ARRAYSEL generates 3 bits.
+                                                                        : ... In instance hexbs_top
+  186 |                             cand_x <= center_x + l_hex_off_x[point_cnt + 1];
+      |                                                ^
+%Warning-WIDTHEXPAND: /openlane/designs/hexbs/src/me_hexbs_topB.v:187:48: Operator ADD expects 7 bits on the RHS, but RHS's ARRAYSEL generates 3 bits.
+                                                                        : ... In instance hexbs_top
+  187 |                             cand_y <= center_y + l_hex_off_y[point_cnt + 1];
+      |                                                ^
+%Warning-WIDTHTRUNC: /openlane/designs/hexbs/src/me_hexbs_topB.v:216:62: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.
+                                                                       : ... In instance hexbs_top
+  216 |                         cand_x <= shex_center_x + s_hex_off_x[point_cnt];
+      |                                                              ^
+%Warning-WIDTHEXPAND: /openlane/designs/hexbs/src/me_hexbs_topB.v:216:49: Operator ADD expects 7 bits on the RHS, but RHS's ARRAYSEL generates 2 bits.
+                                                                        : ... In instance hexbs_top
+  216 |                         cand_x <= shex_center_x + s_hex_off_x[point_cnt];
+      |                                                 ^
+%Warning-WIDTHTRUNC: /openlane/designs/hexbs/src/me_hexbs_topB.v:217:62: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.
+                                                                       : ... In instance hexbs_top
+  217 |                         cand_y <= shex_center_y + s_hex_off_y[point_cnt];
+      |                                                              ^
+%Warning-WIDTHEXPAND: /openlane/designs/hexbs/src/me_hexbs_topB.v:217:49: Operator ADD expects 7 bits on the RHS, but RHS's ARRAYSEL generates 2 bits.
+                                                                        : ... In instance hexbs_top
+  217 |                         cand_y <= shex_center_y + s_hex_off_y[point_cnt];
+      |                                                 ^
+%Warning-WIDTHTRUNC: /openlane/designs/hexbs/src/me_hexbs_topB.v:255:26: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's VARREF 'best_cand_x' generates 7 bits.
+                                                                       : ... In instance hexbs_top
+  255 |                     mv_x <= best_cand_x;
+      |                          ^~
+%Warning-WIDTHTRUNC: /openlane/designs/hexbs/src/me_hexbs_topB.v:256:26: Operator ASSIGNDLY expects 6 bits on the Assign RHS, but Assign RHS's VARREF 'best_cand_y' generates 7 bits.
+                                                                       : ... In instance hexbs_top
+  256 |                     mv_y <= best_cand_y;
+      |                          ^~
+%Warning-WIDTHEXPAND: /openlane/designs/hexbs/src/me_hexbs_topB.v:277:55: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 4 bits.
+                                                                        : ... In instance hexbs_top
+  277 |                            ((pixel_cnt[7:4]) * WIDTH) + pixel_cnt[3:0];
+      |                                                       ^
+%Warning-WIDTHEXPAND: /openlane/designs/hexbs/src/me_hexbs_topB.v:281:48: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'cand_x' generates 7 bits.
+                                                                        : ... In instance hexbs_top
+  281 |                 ref_x_calc = $signed(mb_x_pos) + cand_x;
+      |                                                ^
+%Warning-WIDTHEXPAND: /openlane/designs/hexbs/src/me_hexbs_topB.v:282:48: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'cand_y' generates 7 bits.
+                                                                        : ... In instance hexbs_top
+  282 |                 ref_y_calc = $signed(mb_y_pos) + cand_y;
+      |                                                ^
+%Warning-WIDTHEXPAND: /openlane/designs/hexbs/src/me_hexbs_topB.v:292:55: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 4 bits.
+                                                                        : ... In instance hexbs_top
+  292 |                            ((pixel_cnt[7:4]) * WIDTH) + pixel_cnt[3:0];
+      |                                                       ^

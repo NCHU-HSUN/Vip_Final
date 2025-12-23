@@ -1,0 +1,1 @@
+lvs {/openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/results/signoff/hexbs_top.spice hexbs_top} {/openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/signoff/36-hexbs_top.pnl.v hexbs_top} /home/admin1/.ciel/sky130A/libs.tech/netgen/sky130A_setup.tcl /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/39-hexbs_top.lef.lvs.log -json

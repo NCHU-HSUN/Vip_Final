@@ -1,0 +1,19 @@
+Design Name: hexbs_top
+Run Directory: /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50
+----------------------------------------
+
+Magic DRC Summary:
+Source: /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/reports/signoff/drc.rpt
+Total Magic DRC violations is 0
+----------------------------------------
+
+LVS Summary:
+Source: /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/39-hexbs_top.lef.lvs.log
+Number of nets: 14138                      |Number of nets: 14138                      
+Design is LVS clean.
+----------------------------------------
+
+Antenna Summary:
+Source: /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/41-arc.log
+Pin violations: 251
+Net violations: 184

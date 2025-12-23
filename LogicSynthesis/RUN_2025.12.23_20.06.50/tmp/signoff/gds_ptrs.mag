@@ -1,0 +1,6 @@
+<< properties >>
+string FIXED_BBOX 0 0 157575 159719
+string GDS_END 41648364
+string GDS_FILE /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/results/signoff/hexbs_top.magic.gds
+string GDS_START 1263198
+<< end >>

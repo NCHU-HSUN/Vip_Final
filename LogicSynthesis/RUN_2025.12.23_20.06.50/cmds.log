@@ -1,0 +1,166 @@
+Tue Dec 23 20:06:51 UTC 2025 - Executing "openroad -exit -no_init -python /openlane/scripts/odbpy/lefutil.py get_metal_layers -o /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/layers.list /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/techlef/sky130_fd_sc_hd__nom.tlef"
+
+Tue Dec 23 20:06:51 UTC 2025 - Executing "/openlane/scripts/mergeLef.py -o /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/merged.nom.lef -i /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/techlef/sky130_fd_sc_hd__nom.tlef {/home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/lef/sky130_ef_sc_hd.lef /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/lef/sky130_fd_sc_hd.lef} |& tee /dev/null"
+
+Tue Dec 23 20:06:51 UTC 2025 - Executing "/openlane/scripts/mergeLef.py -o /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/merged.min.lef -i /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/techlef/sky130_fd_sc_hd__min.tlef {/home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/lef/sky130_ef_sc_hd.lef /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/lef/sky130_fd_sc_hd.lef} |& tee /dev/null"
+
+Tue Dec 23 20:06:51 UTC 2025 - Executing "/openlane/scripts/mergeLef.py -o /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/merged.max.lef -i /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/techlef/sky130_fd_sc_hd__max.tlef {/home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/lef/sky130_ef_sc_hd.lef /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/lef/sky130_fd_sc_hd.lef} |& tee /dev/null"
+
+Tue Dec 23 20:06:51 UTC 2025 - Executing "python3 /openlane/scripts/mergeLib.py --output /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/synthesis/merged.lib --name sky130A_merged /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib"
+
+Tue Dec 23 20:06:52 UTC 2025 - Executing "python3 /openlane/scripts/libtrim.py --cell-file /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/synthesis/trimmed.lib.exclude.list --output /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/synthesis/trimmed.lib /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/synthesis/merged.lib"
+
+Tue Dec 23 20:06:52 UTC 2025 - Executing "python3 /openlane/scripts/libtrim.py --cell-file /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/cts/cts.lib.exclude.list --output /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/cts/cts.lib /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib"
+
+Tue Dec 23 20:06:52 UTC 2025 - Executing "python3 /openlane/scripts/libtrim.py --cell-file /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/cts/cts-fastest.lib.exclude.list --output /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/cts/cts-fastest.lib /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__ff_n40C_1v95.lib"
+
+Tue Dec 23 20:06:53 UTC 2025 - Executing "python3 /openlane/scripts/libtrim.py --cell-file /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/cts/cts-slowest.lib.exclude.list --output /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/cts/cts-slowest.lib /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__ss_100C_1v60.lib"
+
+Tue Dec 23 20:06:53 UTC 2025 - Executing "python3 /openlane/scripts/new_tracks.py -i /home/admin1/.ciel/sky130A/libs.tech/openlane/sky130_fd_sc_hd/tracks.info -o /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/routing/config.tracks"
+
+Tue Dec 23 20:06:53 UTC 2025 - Executing "echo {OpenLane ff5509f65b17bfa4068d5336495ab1718987ff69} > /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/OPENLANE_COMMIT"
+
+Tue Dec 23 20:06:53 UTC 2025 - Executing "bash -c {verilator  --lint-only  -Wall  --Wno-DECLFILENAME  --top-module hexbs_top  /openlane/designs/hexbs/src/me_hexbs_topB.v -Wno-fatal --relative-includes |& tee /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/synthesis/linter.log /dev/null}"
+
+Tue Dec 23 20:06:53 UTC 2025 - Executing "sed -E {s/^([[:space:]]+)pg_pin(.*)/\1pin\2\n\1    direction : "inout";/g} /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib > /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/synthesis/1-sky130_fd_sc_hd__tt_025C_1v80.no_pg.lib"
+
+Tue Dec 23 20:06:54 UTC 2025 - Executing "sed -E {s/^([[:space:]]+)pg_pin(.*)/\1pin\2\n\1    direction : "inout";/g} /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/synthesis/trimmed.lib > /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/synthesis/1-trimmed.no_pg.lib"
+
+Tue Dec 23 20:06:54 UTC 2025 - Executing "yosys -c /openlane/scripts/yosys/synth.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/synthesis/1-synthesis.log"
+
+Tue Dec 23 20:07:34 UTC 2025 - Executing "sed -i.bak -e {s/\(set ::env(CURRENT_NETLIST)\).*/\1 \/openlane\/designs\/hexbs\/runs\/RUN_2025.12.23_20.06.50\/results\/synthesis\/hexbs_top.v/} /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/config.tcl"
+
+Tue Dec 23 20:07:34 UTC 2025 - Executing "sed -i.bak /defparam/d /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/results/synthesis/hexbs_top.v"
+
+Tue Dec 23 20:07:35 UTC 2025 - Executing "sta -exit -no_init /openlane/scripts/openroad/sta/multi_corner.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/synthesis/2-sta.log"
+
+Tue Dec 23 20:07:37 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/floorplan.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/floorplan/3-initial_fp.log"
+
+Tue Dec 23 20:07:38 UTC 2025 - Executing "openroad -exit -no_init -python /openlane/scripts/odbpy/defutil.py extract_core_dims --output-data /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/dimensions.txt --input-lef /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/merged.nom.lef /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/floorplan/3-initial_fp.def"
+
+Tue Dec 23 20:07:38 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/ioplacer.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/floorplan/4-io.log"
+
+Tue Dec 23 20:07:39 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/tapcell.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/floorplan/5-tap.log"
+
+Tue Dec 23 20:07:40 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/pdn.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/floorplan/6-pdn.log"
+
+Tue Dec 23 20:07:42 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/gpl.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/placement/7-global.log"
+
+Tue Dec 23 20:08:05 UTC 2025 - Executing "sed -i.bak -e {s/\(set ::env(CURRENT_NETLIST)\).*/\1 \/openlane\/designs\/hexbs\/runs\/RUN_2025.12.23_20.06.50\/tmp\/placement\/7-global.nl.v/} /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/config.tcl"
+
+Tue Dec 23 20:08:05 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/sta/multi_corner.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/placement/8-gpl_sta.log"
+
+Tue Dec 23 20:08:09 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/resizer.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/placement/9-resizer.log"
+
+Tue Dec 23 20:08:16 UTC 2025 - Executing "sed -i.bak -e {s/\(set ::env(CURRENT_NETLIST)\).*/\1 \/openlane\/designs\/hexbs\/runs\/RUN_2025.12.23_20.06.50\/tmp\/placement\/9-resizer.nl.v/} /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/config.tcl"
+
+Tue Dec 23 20:08:16 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/dpl.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/placement/10-detailed.log"
+
+Tue Dec 23 20:08:17 UTC 2025 - Executing "sed -i.bak -e {s/\(set ::env(CURRENT_NETLIST)\).*/\1 \/openlane\/designs\/hexbs\/runs\/RUN_2025.12.23_20.06.50\/results\/placement\/hexbs_top.nl.v/} /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/config.tcl"
+
+Tue Dec 23 20:08:17 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/sta/multi_corner.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/placement/11-dpl_sta.log"
+
+Tue Dec 23 20:08:20 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/cts.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/cts/12-cts.log"
+
+Tue Dec 23 20:09:02 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/sta/multi_corner.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/cts/13-cts_sta.log"
+
+Tue Dec 23 20:09:08 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/resizer_timing.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/cts/14-resizer.log"
+
+Tue Dec 23 20:09:22 UTC 2025 - Executing "sed -i.bak -e {s/\(set ::env(CURRENT_NETLIST)\).*/\1 \/openlane\/designs\/hexbs\/runs\/RUN_2025.12.23_20.06.50\/tmp\/cts\/14-hexbs_top.resized.nl.v/} /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/config.tcl"
+
+Tue Dec 23 20:09:22 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/resizer_routing_design.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/routing/15-resizer_design.log"
+
+Tue Dec 23 20:09:36 UTC 2025 - Executing "sed -i.bak -e {s/\(set ::env(CURRENT_NETLIST)\).*/\1 \/openlane\/designs\/hexbs\/runs\/RUN_2025.12.23_20.06.50\/tmp\/15-hexbs_top.nl.v/} /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/config.tcl"
+
+Tue Dec 23 20:09:37 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/sta/multi_corner.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/routing/16-rsz_design_sta.log"
+
+Tue Dec 23 20:09:43 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/resizer_routing_timing.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/routing/17-resizer_timing.log"
+
+Tue Dec 23 20:09:54 UTC 2025 - Executing "sed -i.bak -e {s/\(set ::env(CURRENT_NETLIST)\).*/\1 \/openlane\/designs\/hexbs\/runs\/RUN_2025.12.23_20.06.50\/tmp\/17-hexbs_top.nl.v/} /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/config.tcl"
+
+Tue Dec 23 20:09:54 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/sta/multi_corner.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/routing/18-rsz_timing_sta.log"
+
+Tue Dec 23 20:10:01 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/groute.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/routing/19-global.log"
+
+Tue Dec 23 20:10:20 UTC 2025 - Executing "openroad -exit -no_init -python /openlane/scripts/odbpy/defutil.py replace_instance_prefixes --original-prefix ANTENNA --new-prefix INSDIODE1 --input-lef /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/merged.nom.lef --output-def /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/17-hexbs_top.def --output /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/17-hexbs_top.odb /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/17-hexbs_top.odb |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/routing/19-antenna_diodes_1.log"
+
+Tue Dec 23 20:10:21 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/groute.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/routing/19-antenna_route_1.log"
+
+Tue Dec 23 20:10:41 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/write_views.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/routing/19-global_write_netlist.log"
+
+Tue Dec 23 20:10:42 UTC 2025 - Executing "sed -i.bak -e {s/\(set ::env(CURRENT_NETLIST)\).*/\1 \/openlane\/designs\/hexbs\/runs\/RUN_2025.12.23_20.06.50\/tmp\/routing\/global.nl.v/} /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/config.tcl"
+
+Tue Dec 23 20:10:42 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/sta/multi_corner.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/routing/21-grt_sta.log"
+
+Tue Dec 23 20:10:45 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/fill.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/routing/22-fill.log"
+
+Tue Dec 23 20:10:47 UTC 2025 - Executing "sed -i.bak -e {s/\(set ::env(CURRENT_NETLIST)\).*/\1 \/openlane\/designs\/hexbs\/runs\/RUN_2025.12.23_20.06.50\/tmp\/routing\/22-fill.nl.v/} /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/config.tcl"
+
+Tue Dec 23 20:10:47 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/droute.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/routing/23-detailed.log"
+
+Tue Dec 23 20:20:13 UTC 2025 - Executing "sed -i.bak -e {s/\(set ::env(CURRENT_NETLIST)\).*/\1 \/openlane\/designs\/hexbs\/runs\/RUN_2025.12.23_20.06.50\/results\/routing\/hexbs_top.nl.v/} /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/config.tcl"
+
+Tue Dec 23 20:20:13 UTC 2025 - Executing "python3 /openlane/scripts/drc_rosetta.py tr to_klayout -o /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/reports/routing/drt.klayout.xml --design-name hexbs_top /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/reports/routing/drt.drc"
+
+Tue Dec 23 20:20:13 UTC 2025 - Executing "openroad -exit -no_init -python /openlane/scripts/odbpy/wire_lengths.py --report-out /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/reports/routing/24-wire_lengths.csv --input-lef /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/merged.nom.lef --output-def /dev/null --output /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/results/routing/hexbs_top.odb /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/results/routing/hexbs_top.odb |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/routing/24-wire_lengths.log"
+
+Tue Dec 23 20:20:15 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/rcx.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/25-parasitics_extraction.min.log"
+
+Tue Dec 23 20:20:22 UTC 2025 - Executing "sta -exit -no_init /openlane/scripts/openroad/sta/multi_corner.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/26-rcx_mcsta.min.log"
+
+Tue Dec 23 20:20:56 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/rcx.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/27-parasitics_extraction.max.log"
+
+Tue Dec 23 20:21:03 UTC 2025 - Executing "sta -exit -no_init /openlane/scripts/openroad/sta/multi_corner.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/28-rcx_mcsta.max.log"
+
+Tue Dec 23 20:21:40 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/rcx.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/29-parasitics_extraction.nom.log"
+
+Tue Dec 23 20:21:47 UTC 2025 - Executing "sta -exit -no_init /openlane/scripts/openroad/sta/multi_corner.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/30-rcx_mcsta.nom.log"
+
+Tue Dec 23 20:22:22 UTC 2025 - Executing "sta -exit -no_init /openlane/scripts/openroad/sta/multi_corner.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/31-rcx_sta.log"
+
+Tue Dec 23 20:22:31 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/irdrop.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/32-irdrop.log"
+
+Tue Dec 23 20:22:38 UTC 2025 - Executing "magic -noconsole -dnull -rcfile /home/admin1/.ciel/sky130A/libs.tech/magic/sky130A.magicrc < /openlane/scripts/magic/wrapper.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/33-gdsii.log"
+
+Tue Dec 23 20:22:52 UTC 2025 - Executing "magic -noconsole -dnull -rcfile /home/admin1/.ciel/sky130A/libs.tech/magic/sky130A.magicrc < /openlane/scripts/magic/wrapper.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/33-gds_ptrs.log"
+
+Tue Dec 23 20:23:03 UTC 2025 - Executing "sed -i.bak -n {/^<< properties >>/,/^<< end >>/p} /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/signoff/gds_ptrs.mag"
+
+Tue Dec 23 20:23:03 UTC 2025 - Executing "magic -noconsole -dnull -rcfile /home/admin1/.ciel/sky130A/libs.tech/magic/sky130A.magicrc < /openlane/scripts/magic/wrapper.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/33-lef.log"
+
+Tue Dec 23 20:23:23 UTC 2025 - Executing "magic -noconsole -dnull -rcfile /home/admin1/.ciel/sky130A/libs.tech/magic/sky130A.magicrc < /openlane/scripts/magic/wrapper.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/33-maglef.log"
+
+Tue Dec 23 20:23:24 UTC 2025 - Executing "python3 /openlane/scripts/klayout/stream_out.py --output /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/results/signoff/hexbs_top.klayout.gds --lyt /home/admin1/.ciel/sky130A/libs.tech/klayout/tech/sky130A.lyt --lym /home/admin1/.ciel/sky130A/libs.tech/klayout/tech/sky130A.map --lyp /home/admin1/.ciel/sky130A/libs.tech/klayout/tech/sky130A.lyp --top hexbs_top --with-gds-file /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/gds/sky130_fd_sc_hd.gds --input-lef /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/merged.nom.lef /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/results/routing/hexbs_top.def |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/34-gdsii-klayout.log"
+
+Tue Dec 23 20:23:27 UTC 2025 - Executing "klayout -b -r /openlane/scripts/klayout/xor.drc -rd a=/openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/results/signoff/hexbs_top.gds -rd b=/openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/results/signoff/hexbs_top.klayout.gds -rd jobs=1 -rd rdb_out=/openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/reports/signoff/35-xor.xml -rd ignore=81/14 -rd rpt_out=/openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/reports/signoff/35-xor.rpt |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/35-xor.log"
+
+Tue Dec 23 20:24:06 UTC 2025 - Executing "magic -noconsole -dnull -rcfile /home/admin1/.ciel/sky130A/libs.tech/magic/sky130A.magicrc < /openlane/scripts/magic/wrapper.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/36-spice.log"
+
+Tue Dec 23 20:24:47 UTC 2025 - Executing "openroad -exit -no_init -python /openlane/scripts/odbpy/power_utils.py write_powered_def --output /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/signoff/36-hexbs_top.p.def --input-lef /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/merged.nom.lef --power-port VPWR --ground-port VGND --powered-netlist {} /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/results/routing/hexbs_top.def |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/37-write_powered_def.log"
+
+Tue Dec 23 20:24:49 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/write_views.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/37-write_powered_verilog.log"
+
+Tue Dec 23 20:24:52 UTC 2025 - Executing "sed -i.bak -e {s/\(set ::env(CURRENT_NETLIST)\).*/\1 \/openlane\/designs\/hexbs\/runs\/RUN_2025.12.23_20.06.50\/tmp\/signoff\/36-hexbs_top.nl.v/} /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/config.tcl"
+
+Tue Dec 23 20:24:53 UTC 2025 - Executing "netgen -batch source /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/signoff/39-setup_file.lef.lvs |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/39-lvs.lef.log"
+
+Tue Dec 23 20:25:00 UTC 2025 - Executing "magic -noconsole -dnull -rcfile /home/admin1/.ciel/sky130A/libs.tech/magic/sky130A.magicrc < /openlane/scripts/magic/wrapper.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/40-drc.log"
+
+Tue Dec 23 20:25:12 UTC 2025 - Executing "python3 /openlane/scripts/drc_rosetta.py magic to_tcl -o /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/reports/signoff/drc.tcl /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/reports/signoff/drc.rpt"
+
+Tue Dec 23 20:25:12 UTC 2025 - Executing "python3 /openlane/scripts/drc_rosetta.py magic to_tr -o /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/reports/signoff/drc.tr /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/reports/signoff/drc.rpt"
+
+Tue Dec 23 20:25:12 UTC 2025 - Executing "python3 /openlane/scripts/drc_rosetta.py tr to_klayout -o /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/reports/signoff/drc.klayout.xml --design-name hexbs_top /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/reports/signoff/drc.tr"
+
+Tue Dec 23 20:25:12 UTC 2025 - Executing "python3 /openlane/scripts/drc_rosetta.py magic to_rdb -o /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/reports/signoff/drc.rdb /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/reports/signoff/drc.rpt"
+
+Tue Dec 23 20:25:12 UTC 2025 - Executing "openroad -exit /openlane/scripts/openroad/antenna_check.tcl |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/41-arc.log"
+
+Tue Dec 23 20:25:17 UTC 2025 - Executing "python3 /openlane/scripts/extract_antenna_violators.py --output /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/reports/signoff/41-antenna_violators.rpt --plain-out /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/reports/signoff/41-antenna_violators_pins.txt /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/41-arc.log"
+
+Tue Dec 23 20:25:17 UTC 2025 - Executing "awk -v vdd=VPWR -v gnd=VGND -f /home/admin1/.ciel/sky130A/libs.tech/openlane/cvc/power.awk /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/signoff/36-hexbs_top.nl.v > /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/signoff/hexbs_top.power"
+
+Tue Dec 23 20:25:17 UTC 2025 - Executing "awk -f /home/admin1/.ciel/sky130A/libs.tech/openlane/cvc/cdl.awk /home/admin1/.ciel/sky130A/libs.ref/sky130_fd_sc_hd/cdl/sky130_fd_sc_hd.cdl /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/results/signoff/hexbs_top.lef.spice > /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/tmp/signoff/hexbs_top.cdl"
+
+Tue Dec 23 20:25:17 UTC 2025 - Executing "cvc_rv /home/admin1/.ciel/sky130A/libs.tech/openlane/cvc/cvcrc |& tee /dev/null /openlane/designs/hexbs/runs/RUN_2025.12.23_20.06.50/logs/signoff/42-erc_screen.log"
+
