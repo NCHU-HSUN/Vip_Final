@@ -160,7 +160,7 @@ module tb_system_verify;
         // --- 結算 ---
         $display("--------------------------------------------");
         $display("Total MBs: %0d, Errors: %0d", total_mbs, err_count);
-        if (err_count == 0 && total_mbs > 0) $display("Result: PERFECT MATCH! (恭喜 HSUN)");
+        if (err_count == 0 && total_mbs > 0) $display("Result: PERFECT MATCH!");
         else $display("Result: FAILED.");
         $display("--------------------------------------------");
         
@@ -182,6 +182,7 @@ module tb_system_verify;
             // 1. 啟用波形存檔 (只存這一段)
             $dumpfile("waveform_boundary.vcd");
             $dumpvars(0, tb_system_verify);
+            $dumpvars(0, tb_system_verify.u_dut);
 
             // 重置記憶體指標 (使用記憶體前段作為測試區)
             ref_frame_start = 0;
