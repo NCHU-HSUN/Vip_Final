@@ -79,7 +79,7 @@ module Smart_Top (
     reg        cur_frame_ready;
     reg        cmd_ack_pending;
 
-    // 給 HEXBS 的參數
+    // 給 HEXDS 的參數
     reg        hex_start;
     reg        hex_busy;
     wire       hex_done;
@@ -271,7 +271,7 @@ module Smart_Top (
         end
     end
 
-    // 讓 HEXBS 僅收到單拍的 start，避免重複觸發
+    // 讓 HEXDS 僅收到單拍的 start，避免重複觸發
     always @(posedge clk_sys or negedge rst_n) begin
         if (!rst_n) begin
             hex_start <= 0;
@@ -357,7 +357,7 @@ module Smart_Top (
         .o_Tx_Done(tx_done)
     );
 
-    hexbs_top #(
+    hexds_top #(
         .WIDTH (FRAME_WIDTH),
         .HEIGHT(FRAME_HEIGHT)
     ) u_core (

@@ -77,7 +77,7 @@ OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
 read_verilog -library xil_defaultlib {
   E:/nchu/Vivado/FinalA/FinalA.srcs/sources_1/new/UART_Modules.v
-  E:/nchu/Vivado/FinalA/FinalA.srcs/sources_1/new/hexbs_top.v
+  E:/nchu/Vivado/FinalA/FinalA.srcs/sources_1/new/hexds_top.v
   E:/nchu/Vivado/FinalA/FinalA.srcs/sources_1/new/Smart_Top.v
 }
 OPTRACE "Adding files" END { }

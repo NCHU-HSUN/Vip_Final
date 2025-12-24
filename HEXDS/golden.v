@@ -48,7 +48,7 @@ module tb_system_verify;
     // ==========================================
     assign dut_mem_rdata = dram_mem[dut_mem_addr];
 
-    hexbs_top u_dut (
+    hexds_top u_dut (
         .clk(clk),
         .rst_n(rst_n),
         .start(start),

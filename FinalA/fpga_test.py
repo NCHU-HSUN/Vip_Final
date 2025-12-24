@@ -249,7 +249,7 @@ def receive_fpga_result(ser):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="HEXBS FPGA 快速資料驗證")
+    parser = argparse.ArgumentParser(description="HEXDS FPGA 快速資料驗證")
     parser.add_argument("--port", default=DEFAULT_COM_PORT, help="Serial COM port")
     parser.add_argument("--baud", type=int, default=DEFAULT_BAUDRATE, help="Baud rate")
     parser.add_argument("--hex-path", type=Path, default=GOLDEN_HEX, help="full_video.hex 路徑")
@@ -298,7 +298,7 @@ def run_verification():
             print("沒有 frame >= 1 的案例可測試。")
             return
 
-        print("=== HEXBS FPGA 快速驗證模式 ===")
+        print("=== HEXDS FPGA 快速驗證模式 ===")
         print(f"影像規格: {video.width}x{video.height}, Frame Size={video.frame_size} bytes")
         print(f"本次準備測試 {len(valid_cases)} 筆案例")
 

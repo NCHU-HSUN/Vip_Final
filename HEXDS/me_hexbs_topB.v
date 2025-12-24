@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module hexbs_top (
+module hexds_top (
     input wire clk,
     input wire rst_n,
     input wire start,
@@ -157,7 +157,7 @@ module hexbs_top (
                         current_accum_sad <= 16'hFFFF;
 
                     if (pixel_cnt == 255) begin
-`ifdef HEXBS_DEBUG
+`ifdef HEXDS_DEBUG
                         if ((mb_x_pos == 0 && (mb_y_pos == 0 || mb_y_pos == 16)) ||
                             (mb_x_pos == 64 && mb_y_pos == 16))
                             $display("[DBGALL][LHEX] center=(%0d,%0d) cand=(%0d,%0d) ref=(%0d,%0d) sad=%0d point=%0d", 
@@ -168,7 +168,7 @@ module hexbs_top (
                             best_point_idx <= point_cnt;
                             best_cand_x <= cand_x;
                             best_cand_y <= cand_y;
-`ifdef HEXBS_DEBUG
+`ifdef HEXDS_DEBUG
                             if ((mb_x_pos == 0 && mb_y_pos == 0) || (mb_x_pos == 0 && mb_y_pos == 16) ||
                                 (mb_x_pos == 64 && mb_y_pos == 16))
                                 $display("[DBG][LHEX] center=(%0d,%0d) cand=(%0d,%0d) ref=(%0d,%0d) sad=%0d point=%0d", 
@@ -225,7 +225,7 @@ module hexbs_top (
                             current_accum_sad <= 16'hFFFF;
 
                         if (pixel_cnt == 255) begin
-`ifdef HEXBS_DEBUG
+`ifdef HEXDS_DEBUG
                             if ((mb_x_pos == 0 && mb_y_pos == 0) || (mb_x_pos == 0 && mb_y_pos == 16) ||
                                 (mb_x_pos == 64 && mb_y_pos == 16))
                                 $display("[DBG][SHEX] center=(%0d,%0d) cand=(%0d,%0d) ref=(%0d,%0d) sad=%0d point=%0d", 

@@ -1,4 +1,4 @@
-# Makefile for HEXBS Verification using iverilog
+# Makefile for HEXDS Verification using iverilog
 
 # Source Files
 TB_FILE   = golden.v

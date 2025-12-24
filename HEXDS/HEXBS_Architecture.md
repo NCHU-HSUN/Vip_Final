@@ -1,6 +1,6 @@
-# **ME\_HEXBS Hardware Architecture**
+# **ME\_HEXDS Hardware Architecture**
 
-此文件描述了 Hexagon-Based Search (HEXBS) Motion Estimation 加速器的硬體架構。
+此文件描述了 Hexagon-Based Search (HEXDS) Motion Estimation 加速器的硬體架構。
 
 ## **Block Diagram**
 
@@ -12,7 +12,7 @@ graph TD
     classDef datapath fill:#e1f5fe,stroke:#333,stroke-width:2px;
     classDef memory fill:#fff3e0,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5;
 
-    subgraph Top_Level [ME_HEXBS IP Core]
+    subgraph Top_Level [ME_HEXDS IP Core]
         direction LR
 
         %% --- Control Unit FSM ---  

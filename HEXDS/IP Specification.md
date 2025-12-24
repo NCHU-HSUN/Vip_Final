@@ -1,4 +1,4 @@
-# **Hexagon-Based Search (HEXBS) Motion Estimation Accelerator Specification**
+# **Hexagon-Based Search (HEXDS) Motion Estimation Accelerator Specification**
 
 **Version:** 1.0
 
@@ -8,13 +8,13 @@
 
 ## **1\. 概述 (General Description)**
 
-本設計為一款針對視訊編碼 (Video Coding) 應用所開發的運動估計 (Motion Estimation) 硬體加速器。採用 **六角形搜尋演算法 (Hexagon-Based Search, HEXBS)**，相較於全搜尋演算法 (Full Search)，在保持影像品質的同時，顯著降低了運算複雜度與搜尋時間。
+本設計為一款針對視訊編碼 (Video Coding) 應用所開發的運動估計 (Motion Estimation) 硬體加速器。採用 **六角形搜尋演算法 (Hexagon-Based Search, HEXDS)**，相較於全搜尋演算法 (Full Search)，在保持影像品質的同時，顫著降低了運算複雜度與搜尋時間。
 
 本 IP Core 採用全數位化邏輯設計，具備獨立的控制單元 (Control Unit) 與資料路徑 (Datapath)，並支援標準 SRAM 介面存取影像數據。
 
 ## **2\. 主要特點 (Key Features)**
 
-* **演算法優化**：實現標準 HEXBS 演算法，包含大六角 (Large Hexagon) 粗搜尋與小六角 (Small Hexagon) 細搜尋機制。  
+* **演算法优化**：實現標準 HEXDS 演算法，包含大六角 (Large Hexagon) 粗搜尋與小六角 (Small Hexagon) 細搜尋機制。
 * **區塊大小 (Block Size)**：支援 16x16 巨集區塊 (Macroblock) 運算。  
 * **搜尋範圍 (Search Range)**：由外部記憶體配置決定，內部資料路徑支援 \-32 \~ \+31 像素偏移。  
 * **單週期處理**：SAD 計算單元採用管線化設計，每個時脈週期處理一個像素差值。  
@@ -75,6 +75,6 @@
 * **運算週期 (Cycle Count)**：  
   * 單一搜尋點計算成本：256 Cycles (16x16 pixels) \+ Pipeline Latency。  
   * 總週期數 \= (搜尋點總數) × 256。  
-  * HEXBS 平均搜尋點數約為 10\~15 點，遠低於 Full Search 的 (2R+1)² 點。  
+  * HEXDS 平均搜尋點數約為 10\~15 點，遠低於 Full Search 的 (2R+1)² 點。  
 * **邏輯閘計數 (Gate Count)**：  
   * (預估值) 約 3k \~ 5k Gates (不含記憶體)，屬於極輕量級硬體設計。

@@ -4,18 +4,18 @@ import sys
 import numpy as np
 
 # 引用原本的程式碼，確保算法邏輯 100% 一致
-from Motion_EstimationG import DEFAULT_SEARCH_RANGE, Y4MReader, pad_frame, algo_hexbs, Frame
+from Motion_EstimationG import DEFAULT_SEARCH_RANGE, Y4MReader, pad_frame, algo_hexds, Frame
 
 # ================= 使用者設定區 (User Settings) =================
 # 影片路徑
 VIDEO_PATH = r"video/garden_sif.y4m" 
 
-# 限制處理幀數 (None 代表處理全部，可用環境變數 HEXBS_MAX_FRAMES 覆寫)
-ENV_MAX_FRAMES = os.environ.get("HEXBS_MAX_FRAMES")
+# 限制處理幀數 (None 代表處理全部，可用環境變數 HEXDS_MAX_FRAMES 覆寫)
+ENV_MAX_FRAMES = os.environ.get("HEXDS_MAX_FRAMES")
 MAX_FRAMES_TO_PROCESS = None if not ENV_MAX_FRAMES else int(ENV_MAX_FRAMES)
 
-# 搜尋範圍 (必須與 Verilog 與 Python 主程式一致，可用 HEXBS_SEARCH_RANGE 覆寫)
-SEARCH_RANGE = int(os.environ.get("HEXBS_SEARCH_RANGE", DEFAULT_SEARCH_RANGE))
+# 搜尋範圍 (必須與 Verilog 與 Python 主程式一致，可用 HEXDS_SEARCH_RANGE 覆寫)
+SEARCH_RANGE = int(os.environ.get("HEXDS_SEARCH_RANGE", DEFAULT_SEARCH_RANGE))
 
 # 輸出檔名
 OUTPUT_DIR = "golden_patterns"
@@ -97,7 +97,7 @@ def run_full_generation():
         f_hex.write(f"// --- Start of Frame {frame_count} ---\n")
         write_frame_to_hex(f_hex, cur.y)
 
-        # 3. 執行 HEXBS 算法產生黃金答案
+        # 3. 執行 HEXDS 算法產生黃金答案
         # 遍歷每一個 Macroblock
         f_trace.write(f"--- Frame {frame_count} Analysis ---\n")
         
@@ -107,10 +107,10 @@ def run_full_generation():
                 # 擷取 Current Block
                 cur_block = cur.y[r:r+16, c:c+16]
                 
-                # 呼叫你的 HEXBS 算法
+                # 呼叫你的 HEXDS 算法
                 # 注意：這裡傳入的是整張 ref.y，算法內部會自己處理邊界與搜尋
                 # 這正是你想要的「在 Verilog 內部切割」的模擬
-                result = algo_hexbs(cur_block, ref.y, r, c, SEARCH_RANGE)
+                result = algo_hexds(cur_block, ref.y, r, c, SEARCH_RANGE)
                 
                 # 寫入 Trace 檔
                 # 格式: MB_X(Col), MB_Y(Row), MV_X, MV_Y, SAD
