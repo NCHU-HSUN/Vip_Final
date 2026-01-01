@@ -3,6 +3,7 @@ import json
 import math
 import os
 import sys
+import threading
 import time
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -18,6 +19,22 @@ DEFAULT_SEARCH_RANGE = 32  # 對應論文 Stage-1 的 ±32 搜尋範圍
 HW_TRACE_SAMPLE_MBS = [(0, 0), (0, 16), (16, 0)]  # 觀察硬體 FSM 映射
 HEXDS_LHP = ((2, 0), (1, 2), (-1, 2), (-2, 0), (-1, -2), (1, -2))
 HEXDS_SHP = ((1, 0), (0, 1), (-1, 0), (0, -1))
+HEXDS_DEBUG = os.environ.get("HEXDS_DEBUG", "0") == "1"  # 設為 1 會印出 HEXDS 每次迭代的參數變化
+HEXDS_LAST_TRACE = None  # 存放最近一次 HEXDS 的詳細追蹤資料
+HEXDS_PRINT_LOCK = threading.Lock()
+
+def _parse_hexds_debug_mb(val: str):
+    if not val:
+        return None
+    try:
+        parts = [p.strip() for p in val.split(",")]
+        if len(parts) != 2:
+            return None
+        return (int(parts[0]), int(parts[1]))
+    except Exception:
+        return None
+
+HEXDS_DEBUG_MB = _parse_hexds_debug_mb(os.environ.get("HEXDS_DEBUG_MB", ""))  # 例如 "0,0" (像素座標)
 
 # 匯入 Numba 加速
 try:
@@ -230,28 +247,124 @@ def algo_diamond(cur, ref, r, c, rng):
         if sad < best_sad: best_sad, best_dr, best_dc = sad, dr, dc
     return MotionVectorResult(best_dr, best_dc, best_sad, checks)
 
-@jit(nopython=True, nogil=True)
-def algo_hexds(cur, ref, r, c, rng):
-    cache = np.zeros((2*rng+1, 2*rng+1), dtype=np.int8)
+def algo_hexds(cur_block, ref, r, c, rng):
+    """純 Python 版 HEXDS，提供詳細變數變化（受 HEXDS_DEBUG 控制）。"""
+    global HEXDS_LAST_TRACE
+    debug_enabled = HEXDS_DEBUG and (HEXDS_DEBUG_MB is None or (r, c) == HEXDS_DEBUG_MB)
+    log_lines = [] if debug_enabled else None
+    log_prefix = f"[HEXDS r={r} c={c}] " if debug_enabled else ""
+
+    h, w = ref.shape
+    cache = np.zeros((2 * rng + 1, 2 * rng + 1), dtype=np.int8)
     checks, best_dr, best_dc = 0, 0, 0
-    best_sad = calculate_sad(cur, get_ref_block(ref, r, c, 0, 0))
-    cache[rng, rng] = 1; checks += 1
+    best_sad = int(calculate_sad(cur_block, get_ref_block(ref, r, c, 0, 0)))
+    cache[rng, rng] = 1
+    checks += 1
+
+    trace = {
+        "block": (r, c),
+        "rng": rng,
+        "init_sad": best_sad,
+        "steps": []
+    }
+    if debug_enabled:
+        log_lines.append(f"{log_prefix}Start: cur_shape={tuple(cur_block.shape)} ref_shape={tuple(ref.shape)}")
+        log_lines.append(f"{log_prefix}Start: mv=(0,0) rng=±{rng} init_sad={best_sad}")
     
+    iter_idx = 0
     while True:
+        iter_idx += 1
         ctr_r, ctr_c, center_best = best_dr, best_dc, True
+        checked = 0
+        skipped_cache = 0
+        skipped_range = 0
+        step_entry = {"stage": "LHP", "center": (ctr_r, ctr_c), "candidates": []}
+        if debug_enabled:
+            log_lines.append(f"{log_prefix}Iter {iter_idx} [LHP] center=({ctr_r},{ctr_c}) current_best={best_sad}")
         for i, j in HEXDS_LHP:
             dr, dc = ctr_r + i, ctr_c + j
-            if not (-rng<=dr<=rng and -rng<=dc<=rng) or cache[dr+rng, dc+rng]: continue
-            sad = calculate_sad(cur, get_ref_block(ref, r, c, dr, dc))
-            checks += 1; cache[dr+rng, dc+rng] = 1
-            if sad < best_sad: best_sad, best_dr, best_dc, center_best = sad, dr, dc, False
-        if center_best: break
+            if not (-rng <= dr <= rng and -rng <= dc <= rng):
+                skipped_range += 1
+                continue
+            if cache[dr + rng, dc + rng]:
+                skipped_cache += 1
+                continue
+            sad = int(calculate_sad(cur_block, get_ref_block(ref, r, c, dr, dc)))
+            checked += 1
+            checks += 1
+            cache[dr + rng, dc + rng] = 1
+            rr = min(max(r + dr, 0), h - 16)
+            cc = min(max(c + dc, 0), w - 16)
+            candidate_info = {
+                "offset": (i, j),
+                "candidate": (dr, dc),
+                "ref_pos": (rr, cc),
+                "clamped": (rr != r + dr) or (cc != c + dc),
+                "sad": sad,
+                "best_before": best_sad
+            }
+            if debug_enabled:
+                clamp_tag = " CLAMP" if candidate_info["clamped"] else ""
+                log_lines.append(f"{log_prefix}  cand=({dr},{dc}) sad={sad} ref=({rr},{cc}){clamp_tag}")
+            if sad < best_sad:
+                best_sad, best_dr, best_dc, center_best = sad, dr, dc, False
+                candidate_info["best_after"] = best_sad
+                if debug_enabled:
+                    log_lines.append(f"{log_prefix}  -> new best mv=({best_dr},{best_dc}) sad={best_sad}")
+            step_entry["candidates"].append(candidate_info)
+        trace["steps"].append(step_entry)
+        if debug_enabled:
+            log_lines.append(f"{log_prefix}Iter {iter_idx} [LHP] checked={checked} skipped_cache={skipped_cache} skipped_range={skipped_range}")
+        if center_best:
+            break
+        if debug_enabled:
+            log_lines.append(f"{log_prefix}Iter {iter_idx} [LHP] move center to ({best_dr},{best_dc}) best_sad={best_sad}")
+
+    step_entry = {"stage": "SHP", "center": (best_dr, best_dc), "candidates": []}
+    checked = 0
+    skipped_cache = 0
+    skipped_range = 0
     for i, j in HEXDS_SHP:
         dr, dc = best_dr + i, best_dc + j
-        if not (-rng<=dr<=rng and -rng<=dc<=rng) or cache[dr+rng, dc+rng]: continue
-        sad = calculate_sad(cur, get_ref_block(ref, r, c, dr, dc))
-        checks += 1; cache[dr+rng, dc+rng] = 1
-        if sad < best_sad: best_sad, best_dr, best_dc = sad, dr, dc
+        if not (-rng <= dr <= rng and -rng <= dc <= rng):
+            skipped_range += 1
+            continue
+        if cache[dr + rng, dc + rng]:
+            skipped_cache += 1
+            continue
+        sad = int(calculate_sad(cur_block, get_ref_block(ref, r, c, dr, dc)))
+        checked += 1
+        checks += 1
+        cache[dr + rng, dc + rng] = 1
+        rr = min(max(r + dr, 0), h - 16)
+        cc = min(max(c + dc, 0), w - 16)
+        candidate_info = {
+            "offset": (i, j),
+            "candidate": (dr, dc),
+            "ref_pos": (rr, cc),
+            "clamped": (rr != r + dr) or (cc != c + dc),
+            "sad": sad,
+            "best_before": best_sad
+        }
+        if debug_enabled:
+            clamp_tag = " CLAMP" if candidate_info["clamped"] else ""
+            log_lines.append(f"{log_prefix}[SHP] cand=({dr},{dc}) sad={sad} ref=({rr},{cc}){clamp_tag}")
+        if sad < best_sad:
+            best_sad, best_dr, best_dc = sad, dr, dc
+            candidate_info["best_after"] = best_sad
+            if debug_enabled:
+                log_lines.append(f"{log_prefix}[SHP] -> new best mv=({best_dr},{best_dc}) sad={best_sad}")
+        step_entry["candidates"].append(candidate_info)
+    trace["steps"].append(step_entry)
+    if debug_enabled:
+        log_lines.append(f"{log_prefix}[SHP] checked={checked} skipped_cache={skipped_cache} skipped_range={skipped_range}")
+
+    trace["result"] = {"mv": (best_dr, best_dc), "sad": best_sad, "checks": checks}
+    HEXDS_LAST_TRACE = trace
+    if debug_enabled:
+        log_lines.append(f"{log_prefix}Finish: mv=({best_dr},{best_dc}) sad={best_sad} checks={checks}")
+        with HEXDS_PRINT_LOCK:
+            print("\n".join(log_lines), flush=True)
     return MotionVectorResult(best_dr, best_dc, best_sad, checks)
 
 
@@ -323,8 +436,8 @@ def capture_hw_trace_samples(video_name: str, frame_idx: int, ref_frame: Frame, 
 def process_row_task(row_idx, width, cur_y, ref_y, algo_func, rng):
     results = []
     for col_idx in range(0, width, 16):
-        cur_mb = cur_y[row_idx : row_idx+16, col_idx : col_idx+16].copy()
-        res = algo_func(cur_mb, ref_y, row_idx, col_idx, rng)
+        cur_block = cur_y[row_idx : row_idx+16, col_idx : col_idx+16].copy()
+        res = algo_func(cur_block, ref_y, row_idx, col_idx, rng)
         results.append(res)
     return row_idx, results
 
