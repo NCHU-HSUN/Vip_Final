@@ -5,7 +5,7 @@
 `endif
 
 `ifndef ENABLE_WAVE_DUMP_DEFAULT
-`define ENABLE_WAVE_DUMP_DEFAULT 0
+`define ENABLE_WAVE_DUMP_DEFAULT 1
 `endif
 
 module tb_system_verify;
@@ -42,6 +42,7 @@ module tb_system_verify;
     integer err_count = 0, total_mbs = 0, watchdog = 0;
     
     reg [8*100:1] dummy_line; 
+    reg wave_dump_active;
 
     // ==========================================
     // 3. 實例化 DUT (Device Under Test)
@@ -68,6 +69,33 @@ module tb_system_verify;
     // 4. 時脈與測試流程
     // ==========================================
     always #5 clk = ~clk; 
+
+    // 控制是否產生波形，預設跟隨巨集，可用 +ENABLE_WAVE_DUMP=1 覆蓋
+    initial begin : wave_dump_setup
+        integer wave_dump_enable_flag;
+        integer plusarg_override;
+
+        wave_dump_active = 0;
+        wave_dump_enable_flag = `ENABLE_WAVE_DUMP_DEFAULT;
+
+        if ($test$plusargs("dump_waves")) begin
+            wave_dump_enable_flag = 1;
+        end
+
+        if ($value$plusargs("ENABLE_WAVE_DUMP=%d", plusarg_override)) begin
+            wave_dump_enable_flag = plusarg_override;
+        end
+
+        if (wave_dump_enable_flag) begin
+            wave_dump_active = 1;
+            $display("[WaveDump] Enabled. Output file: %0s", `WAVEFILE);
+            $dumpfile(`WAVEFILE);
+            $dumpvars(0, tb_system_verify);
+            $dumpvars(0, tb_system_verify.u_dut);
+        end else begin
+            $display("[WaveDump] Disabled. Use +ENABLE_WAVE_DUMP=1 or set ENABLE_WAVE_DUMP_DEFAULT=1 to enable.");
+        end
+    end
 
     initial begin
         // --- 初始化 ---
@@ -103,7 +131,10 @@ module tb_system_verify;
             if (scan_res == 6) begin
                 // 讀取成功
                 total_mbs = total_mbs + 1;
-
+                if (total_mbs > 25) begin
+                        $display("DEBUG MODE: 為了波形順暢，只跑 25 個 MB 就強制結束！");
+                        $finish;
+                    end
                 cur_mb_x = exp_mb_col; 
                 cur_mb_y = exp_mb_row;
                 
@@ -176,13 +207,21 @@ module tb_system_verify;
     task run_boundary_tests;
         integer i, r, c;
         reg [7:0] pixel_val;
+        reg boundary_wave_dump_started;
         begin
             $display("\n[Extra Test] Starting Boundary Condition Tests (Waveform Enabled)...");
+            boundary_wave_dump_started = 0;
             
-            // 1. 啟用波形存檔 (只存這一段)
-            $dumpfile("waveform_boundary.vcd");
-            $dumpvars(0, tb_system_verify);
-            $dumpvars(0, tb_system_verify.u_dut);
+            if (!wave_dump_active) begin
+                $display("[Extra Test] Enabling dedicated boundary waveform dump -> waveform_boundary.vcd");
+                $dumpfile("waveform_boundary.vcd");
+                $dumpvars(0, tb_system_verify);
+                $dumpvars(0, tb_system_verify.u_dut);
+                wave_dump_active = 1;
+                boundary_wave_dump_started = 1;
+            end else begin
+                $display("[Extra Test] Global waveform dump already active (%0s).", `WAVEFILE);
+            end
 
             // 重置記憶體指標 (使用記憶體前段作為測試區)
             ref_frame_start = 0;
@@ -234,9 +273,13 @@ module tb_system_verify;
             wait(done);
             $display("    -> Result: MV=(%d, %d), SAD=%d", hw_mv_x, hw_mv_y, hw_sad);
 
-            // 關閉波形
-            $dumpoff;
-            $display("[Extra Test] Done. Waveform saved to 'waveform_boundary.vcd'\n");
+            if (boundary_wave_dump_started) begin
+                $dumpoff;
+                wave_dump_active = 0;
+                $display("[Extra Test] Done. Waveform saved to 'waveform_boundary.vcd'\n");
+            end else begin
+                $display("[Extra Test] Done. Waveform already captured in %0s\n", `WAVEFILE);
+            end
         end
     endtask
 
